@@ -1,0 +1,97 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage{naaclhlt2010}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{amsmath,amsthm, amssymb}
+\usepackage{multirow}
+\usepackage{microtype}
+\usepackage{subfigure}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{bm}
+\usepackage{multirow}
+\usepackage{dsfont}
+
+%%%% EVIL %%%%%%
+\usepackage[compact,small]{titlesec}
+\usepackage[small]{caption}
+\usepackage{mdwlist}
+%\setlength{\belowcaptionskip}{0pt}
+\setlength{\textfloatsep}{8pt}
+%\setlength{\floatsep}{0pt}
+%%%% EVIL %%%%%%
+
+\newcommand{\myfig}[1]{Figure~\ref{#1}}
+\newcommand{\myeq}[1]{Equation~\ref{#1}}
+\newcommand{\mytab}[1]{Table~\ref{#1}}
+\newcommand{\wordset}[1]{\texttt{\{#1\}}}
+\newcommand{\word}[1]{\texttt{#1}}
+\newcommand{\mysec}[1]{Section~\ref{#1}}
+
+%%% Temporary
+%\usepackage{fancyhdr}
+%\chead{{\bf DRAFT COPY: DO NOT CITE OR DISTRIBUTE}}
+%\lhead{}
+%\rhead{}
+%\pagestyle{fancy}
+
+\title{Human sampling of topic models}
+
+\author{}
+
+\begin{document}
+
+%% \makeanontitle
+\maketitle
+\vspace{-.1in}
+\begin{abstract}%
+  Probabilistic topic models are a popular tool for the unsupervised
+  analysis of text, providing both a predictive model of future text
+  and a latent topic representation of the corpus.  Practitioners
+  typically assume that the latent space is semantically meaningful.
+  It is used to check models, summarize the corpus, and guide
+  exploration of its contents.  However, whether the latent space is
+  interpretable is in need of quantitative evaluation.  In this paper,
+  we present new quantitative methods for measuring semantic meaning
+  in inferred topics.  We back these measures with large-scale user
+  studies, showing that they capture aspects of the model that are
+  undetected by previous measures of model quality based on held-out
+  likelihood.  Surprisingly, topic models which perform better on
+  held-out likelihood may infer less semantically meaningful topics.
+\end{abstract}
+
+\input{intro}
+\input{related}
+\input{tasks}
+\input{experiments}
+\section{Discussion}
+
+We presented the first validation of the assumed coherence and
+relevance of topic models using human experiments.
+% This validation is only possible today because of the advent of new
+% services like Amazon Mechanical Turk.
+For three topic models, we demonstrated that traditional metrics do
+not capture whether topics are coherent or not.  Traditional metrics
+are, indeed, negatively correlated with the measures of topic quality
+developed in this paper.  Our measures enable new forms of model
+selection and suggest that practitioners developing topic models should
+thus focus on evaluations that depend on real-world task performance
+rather than optimizing likelihood-based measures.
+
+In a more qualitative vein, this work validates the use of topics for
+corpus exploration and information retrieval.  Humans appreciate the
+semantic coherence of topics and can associate the same documents with
+a topic that a topic model does.  An intriguing possibility is the
+development of models that explicitly seek to optimize the measures we
+develop here either by incorporating human judgments into the
+model-learning framework or creating a computational proxy that
+simulates human judgments.
+
+\bibliographystyle{naaclhlt2010}
+
+\small
+
+\bibliography{journal-abbrv,nlp}
+
+\end{document}

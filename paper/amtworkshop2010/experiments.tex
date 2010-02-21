@@ -1,0 +1,370 @@
+\section{Experimental results}
+\label{sec:experiments}
+
+To prepare data for human subjects to review, we fit three different
+topic models on two corpora.  In this section, we describe how we
+prepared the corpora, fit the models, and created the tasks described
+in \mysec{sec:tasks}.  We then present the results of these human
+trials and compare them to metrics traditionally used to evaluate
+topic models.
+
+\subsection{Models and corpora}
+\label{sec:expermodels}
+
+In this work we study three topic models: probabilistic latent
+semantic indexing (pLSI)~\cite{hofmann-99}, latent Dirichlet
+allocation (LDA)~\cite{blei-03}, and the correlated topic model
+(CTM)~\cite{blei-06}, which are all mixed membership
+models~\cite{Erosheva:2004ph}.  The number of latent topics, $K$, is a free
+parameter in each of the models; here we explore this with $K=50$,
+$100$ and $150$.  The remaining parameters -- $\beta_k$, the topic
+multinomial distribution for topic $k$; and $\theta_d$, the topic
+mixture proportions for document $d$ -- are inferred from data.  The
+three models differ in how these latent parameters are inferred.
+
+% Conditioned on $\theta_d$, the likelihood of the observed bag of words
+% for document $d$, $\bm{w}_d$, for all three models exhibits the same
+% probabilistic form,
+% \begin{align}\label{eq:likelihood}
+% p(\bm{w}_d|\theta_d) = \prod_{n=1}^{N}\sum_{z_{n}=1}^K p(w_{n}|z_{n}, \beta_{1:K}) p(z_{n}|\theta).
+% \end{align}
+% However, the different assumptions about the mixture proportions
+% $\theta_d$ used by the three models lead to significantly different
+% latent spaces.
+
+\begin{list}{\textbf}{\leftmargin=0pt}
+\setlength{\itemindent}{25pt}
+\setlength{\itemsep}{0pt}
+\item[{\bf pLSI}] In pLSI, the topic mixture proportions $\theta_d$ are a parameter for
+% Conditioned on $\theta_d$, the likelihood of the observed bag of words
+% for document $d$, $\bm{w}_d$, for all three models exhibits the same
+% probabilistic form,
+% \begin{align}\label{eq:likelihood}
+% p(\bm{w}_d|\theta_d) = \prod_{n=1}^{N}\sum_{z_{n}=1}^K p(w_{n}|z_{n}, \beta_{1:K}) p(z_{n}|\theta).
+% \end{align}
+% However, the different assumptions about the mixture proportions
+% $\theta_d$ used by the three models lead to significantly different
+% latent spaces.
+  each document.  Thus, pLSI is not a fully generative model, and the number
+  of parameters grows linearly with the number of documents.
+% jc1: ???
+% Moreover due to its non-generative nature, inference needs to be
+% done in the ``folding-in'' process~\cite{hofmann-99}.
+  We fit pLSI using the EM algorithm~\cite{Dempster:1977} but
+  regularize pLSI's estimates of $\theta_d$ using pseudo-count
+  smoothing, $\alpha = 1$.  
+
+% Under these settings, the maximum \emph{a
+%     posteriori} (MAP) estimates found by pLSI correspond to those
+%   found by LDA with a symmetric Dirichlet prior on $\theta_d$ with
+%   parameter $\alpha$~\cite{Girolami-03}.
+
+\item[{\bf LDA}] LDA is a fully generative model of documents where
+  the mixture proportions $\theta_d$ are treated as a random variable
+  drawn from a Dirichlet prior
+  distribution. %that is%$\theta \sim \textrm{Dirichlet}(\alpha)$.
+% \begin{align}\label{eq:dirichlet}
+% p(\theta | \alpha) = \frac{\Gamma(\sum_{k=1}^K\alpha_k)}{\prod_{k=1}^K \Gamma(\alpha_k) } \prod_{k=1}^K\theta_k^{\alpha_k-1},
+% \end{align}
+% where $\Gamma(\cdot)$ is the Gamma function.  
+% Due to its generative nature, inference on unseen documents is
+% well-defined.  
+  Because the direct computation of the posterior is intractable, we
+  employ variational inference~\cite{blei-03} and set the symmetric
+  Dirichlet prior parameter, $\alpha$, to 1.
+
+\item[{\bf CTM}] In LDA, the components of $\theta_d$ are nearly independent
+  (i.e., $\theta_d$ is statistically neutral).
+% This leads to the possibly-unrealistic modeling assumption
+% that the presence of one topic in a document is not correlated with
+% the presence of another topic in the same document. 
+CTM allows for a richer covariance structure between topic proportions
+by using a logistic normal prior over the topic mixture proportions
+$\theta_d$.  For each topic, $k$, a real $\gamma$ is drawn from a
+normal distribution and exponentiated.  This set of $K$ non-negative
+numbers are then normalized to yield $\theta_d$.  Here, we train the
+CTM using variational inference~\cite{blei-06}.
+\end{list}
+
+% Using this formulation, CTM is able to capture the correlations among
+% different topics and provides a natural way of visualizing the topics
+% using the correlations.
+
+
+%% {\bf TODO: Chong, it seems not fair not to optimize $\alpha$ for pLSI and LDA but optimize that for CTM?}
+
+We train each model on two corpora.  For each corpus, we apply a part
+of speech tagger~\cite{schmid-94} and remove all tokens tagged as
+proper nouns (this was for the benefit of the human subjects; success
+in early experiments required too much encyclopedic knowledge).  Stop
+words~\cite{loper-02} and terms occurring in fewer than five documents
+are also removed. The two corpora we use are 1.) a collection of 8447
+articles from the \textit{New York Times} from the years 1987 to 2007
+with a vocabulary size of 8269 unique types and around one million
+tokens and 2.)  a sample of 10000 articles from \textit{Wikipedia}
+(http://www.wikipedia.org) with a vocabulary size of 15273 unique
+types and three million tokens.
+% \item \textbf{IMDB}: a collection of xxx reviews from the
+%   \textit{Internet Movie Database}
+%   (IMDb)\footnote{http://www.imdb.com/}, with a vocabulary size xxx
+%   and around xxx words.
+
+\subsection{Evaluation using conventional objective measures}
+\label{sec:evalmetrics}
+
+There are several metrics commonly used to evaluate topic models in
+the literature~\cite{wallach-09}.  Many of these metrics are
+\emph{predictive} metrics; that is, they capture the model's ability
+to predict a \emph{test set} of unseen documents after having learned
+its parameters from a \emph{training set}.  In this work, we set aside
+20\% of the documents in each corpus as a test set and train on the
+remaining 80\% of documents.  We then compute predictive rank and
+predictive log likelihood.
+
+To ensure consistency of evaluation across different models, we follow
+Teh et al.'s~\cite{TehKurWel2008} approximation of the predictive
+likelihood $p(\textbf{w}_d|D_{\textrm{train}})$ using $p({\bm
+  w}_d|D_{\textrm{train}}) \approx p({\bm w}_d|\hat{\theta}_d)$, where
+$\hat{\theta}_d$ is a point estimate of the posterior topic
+proportions for document $d$. For pLSI $\hat{\theta}_d$ is the MAP
+estimate; for LDA and CTM $\hat{\theta}_d$ is the mean of the
+variational posterior.
+With this information, we can ask what words the model believes will
+be in the document and compare it with the document's actual
+composition.  Given document $\bm w_d$, we first estimate
+$\hat{\theta}_d$ and then for every word in the vocabulary, we compute
+$p(w|\hat{\theta}_d) = \sum_z p(w|z)p(z|\hat{\theta}_d)$.  Then we
+compute the average rank for the terms that actually appeared in document
+$\bm w_d$ (we follow the convention that lower rank is better).
+
+
+%\paragraph{Predictive perplexity}
+
+% The predictive perplexity of a heldout set $D_{heldout}$ given the
+% training set $D_{train}$ is defined as
+% \begin{align*} \label{eq:perplexity}
+%   {\textrm{perplexity}} = \exp\left\{-\frac{\sum_{d\in D_{\textrm{heldout}}}\log
+%       p(\textbf{w}_d|D_{\textrm{train}})}{\sum_{d\in D_{heldout}}N_d}\right\}.
+% \end{align*}
+
+
+% \begin{table}
+% \caption{Perplexity comparison for different models on three corpora.}
+% \label{fig:perplexity}
+% %\vskip 0.15in
+% \begin{center}
+% \begin{small}
+% \begin{sc}
+% \begin{tabular}{c|c|cc}
+%   \hline
+% \multicolumn{4}{c}{Per-word perplexity} \\
+% \hline
+% \#Topics & Model & NYT & Wikipedia \\
+% \hline
+% \multirow{3}{*}{50}
+% & LDA & 1641.82 & 1980.65 \\
+% & CTM & 1755.38 & 2517.14 \\
+% & pLSI &  &  \\
+% \hline
+% \multirow{3}{*}{100}
+% & LDA & 1542.21 & 1836.51 \\
+% & CTM & 1652.53 & 2327.30 \\
+% & pLSI &  &  \\
+% \hline
+% \multirow{3}{*}{150}
+% & LDA & 1485.04 & 1755.31 \\
+% & CTM &         & 2227.58 \\
+% & pLSI &   \\
+% \hline
+% \end{tabular}
+% \end{sc}
+% \end{small}
+% \end{center}
+% \end{table}
+
+%% We need to decide if we want to keep these metrics...
+% \paragraph{Word predictions}
+
+% The first metric is predictive perplexity, which is an objective
+% metric used extensively for comparing topic models in the
+% literature.  Perplexity is a measure of the
+% information content of unseen documents that cannot be captured by the
+% model.  Lower perplexity means that the model is better able to
+% explain the language of test documents.
+
+
+The average word likelihood and average rank across all documents in
+our test set are shown in Table~\ref{tab:word-prediction}.  These
+results are consistent with the values reported in the
+literature~\cite{blei-03,blei-06}; in most cases CTM performs best,
+followed by LDA.
+
+\begin{table}
+  \caption{Two predictive metrics: predictive log likelihood/predictive rank.  Consistent with values reported in the literature, CTM generally performs the best, followed by LDA, then pLSI.  The bold numbers indicate the best performance in each row.}
+\label{tab:word-prediction}
+%\vskip 0.15in
+\centering
+\footnotesize
+\begin{sc}
+\begin{tabular}{c|c|ccc}
+%% \hline
+%%  & & \multicolumn{3}{c|}{Model} \\
+Corpus & Topics & LDA & CTM & pLSI \\
+\hline
+\multirow{3}{*}{New York Times}
+& 50  &  {\bf-7.3214} / {\bf 784.38}  &    -7.3335 / 788.58 & -7.3384 / 796.43\\
+& 100 &  -7.2761 / 778.24  & {\bf -7.2647} / {\bf 762.16} & -7.2834 / 785.05 \\
+& 150 &  -7.2477 / 777.32  & -7.2467 / {\bf 755.55} & {\bf -7.2382} /  770.36 \\
+\hline
+\multirow{3}{*}{Wikipedia}
+& 50  & {\bf -7.5257} / 961.86 & -7.5332 / {\bf 936.58} & -7.5378 / 975.88 \\
+& 100 & -7.4629 / 935.53 & {\bf -7.4385} / {\bf 880.30} & -7.4748 / 951.78 \\
+& 150 & -7.4266 / 929.76 & {\bf -7.3872} / {\bf 852.46} & -7.4355 /  945.29 \\
+%\hline
+\end{tabular}
+\end{sc}
+\vspace{0.2in}
+\end{table}
+
+\subsection{Analyzing human evaluations}
+
+The tasks described in \mysec{sec:tasks} were offered on Amazon
+Mechanical Turk (http://www.mturk.com), which allows workers (our pool
+of prospective subjects) to perform small jobs for a fee through a Web
+interface.  No specialized training or knowledge is typically expected
+of the workers.  Amazon Mechanical Turk has been successfully used in
+the past to develop gold-standard data for natural language
+processing~\cite{snow-08} and to label images~\cite{imagenet-cvpr09}.
+For both the word intrusion and topic intrusion tasks, we presented
+each worker with jobs containing ten of the tasks described in
+\mysec{sec:tasks}.  Each job was performed by 8 separate workers, and
+workers were paid between \$0.07 -- \$0.15 per job.
+
+\paragraph{Word intrusion}
+As described in \mysec{sec:wordintrusion}, the word intrusion task
+measures how well the inferred topics match human concepts (using
+\emph{model precision}, i.e., how well the intruders detected by the
+subjects correspond to those injected into ones found by the topic model).  
+
+Let $\omega^{m}_{k}$ be the index of the intruding word among the words generated
+from the $k^{th}$ topic inferred by model $m$.  Further let $i^m_{k, s}$ be
+the intruder selected by subject $s$ on the set of words generated from the
+$k$th topic inferred by model $m$ and let $S$ denote the number of subjects.  We
+define model precision by the fraction of subjects agreeing with the model,
+\begin{equation}
+  \mathrm{MP}^m_k = \textstyle \sum_{s} \mathds{1}(i^m_{k,s} = \omega^{m}_{k}) / S.
+  \label{eq:mp}
+\end{equation}
+
+
+\myfig{fig:precision} shows boxplots of the precision for the three
+models on the two corpora.  In most cases LDA performs best. Although
+CTM gives better predictive results on held-out likelihood, it does
+not perform as well on human evaluations. This may be because CTM
+finds correlations between topics and correlations within topics are
+confounding factors; the intruder for one topic might be selected from
+another highly correlated topic.  The performance of pLSI degrades
+with larger numbers of topics, suggesting that
+overfitting~\cite{blei-03} might affect interpretability as well as
+predictive power.
+
+\myfig{fig:topic_precision} (left) shows examples of topics with high
+and low model precisions from the NY Times data fit with LDA using 50
+topics. In the example with high precision, the topic words all
+coherently express a painting theme.  For the low precision example,
+ ``taxis'' did not fit in with the other
+political words in the topic, as $87.5\%$ of subjects chose ``taxis''
+as the intruder.
+
+
+The relationship between model precision, $\mathrm{MP}^m_k$, and the
+model's estimate of the likelihood of the intruding word in
+\myfig{fig:prec_vs_lhood} (top row) is surprising.  The highest
+probability did not have the best interpretability; in fact, the trend
+was the opposite.  This suggests that as topics become more
+fine-grained in models with larger number of topics, they are less
+useful for humans.  The downward sloping trend lines in
+\myfig{fig:prec_vs_lhood} implying that the models are often trading
+improved likelihood for lower interpretability.
+
+
+The model precision showed a negative correlation (Spearman's $\rho =
+-0.235$ averaged across all models, corpora, and topics) with the
+number of senses in WordNet of the words displayed to the
+subjects~\cite{Miller90} and a slight positive correlation ($\rho =
+0.109$) with the average pairwise Jiang-Conrath similarity of
+words\footnote{Words without entries in WordNet were ignored; polysemy
+  was handled by taking the maximum over all senses of words.  To
+  handle words in the same synset (e.g. ``fight'' and ``battle''), the
+  similarity function was capped at 10.0.}~\cite{jiang-97}.  
+
+\paragraph{Topic intrusion}
+
+In \mysec{sec:topicintrusion}, we introduced the topic intrusion task
+to measure how well a topic model assigns topics to documents.  We
+define the \emph{topic log odds} as a quantitative measure of the
+agreement between the model and human judgments on this task.  Let
+$\hat{\theta}^m_d$ denote model $m$'s point estimate of the topic
+proportions vector associated with document $d$ (as described in
+\mysec{sec:evalmetrics}).  Further, let $j^m_{d,s} \in \{1\ldots K\}$
+be the intruding topic selected by subject $s$ for document $d$ on
+model $m$ and let $j^m_{d,*}$ denote the ``true'' intruder, i.e., the
+one generated by the model.  We define the topic log odds as the log
+ratio of the probability mass assigned to the true intruder to the
+probability mass assigned to the intruder selected by the subject,
+\begin{equation}\label{eq:tlo}
+  \mathrm{TLO}^m_d = (\textstyle \sum_{s} \log \hat{\theta}^m_{d,j^m_{d,*}} - \log \hat{\theta}^m_{d,j^m_{d,s}}) / S.
+\end{equation}
+The higher the value of $\mathrm{TLO}^m_d$, the greater the
+correspondence between the judgments of the model and the subjects.
+The upper bound on $\mathrm{TLO}^m_d$ is 0.  This is achieved when the
+subjects choose intruders with a mixture proportion no higher than the
+true intruder's.
+
+
+\myfig{fig:odds} shows boxplots of the topic log odds for the three
+models.  As with model precision, LDA and pLSI generally outperform
+CTM.  Again, this trend runs counter to CTM's superior performance on
+predictive likelihood.  A histogram of the TLO of individual Wikipedia
+documents is given in \myfig{fig:topic_precision} (right) for the
+fifty-topic LDA model.  Documents about very specific, unambiguous
+concepts, such as ``Lindy Hop,'' have high TLO because it is easy for
+both humans and the model to assign the document to a particular
+topic.  When documents express multiple disparate topics, human
+judgments diverge from those of the model.  At the low end of the
+scale is the article ``Book'' which touches on diverse areas such as
+history, science, and commerce.  It is difficult for LDA to pin down
+specific themes in this article which match human perceptions.
+
+\myfig{fig:prec_vs_lhood} (bottom row) shows that, as with model
+precision, increasing predictive likelihood does not imply improved
+topic log odds scores.  While the topic log odds are nearly constant
+across all numbers of topics for LDA and pLSI, for CTM topic log odds
+and predictive likelihood are negatively correlated, yielding the
+surprising conclusion that higher predictive likelihoods do not lead
+to improved model interpretability.
+
+% [1] "nyt"
+
+% 	Spearman's rank correlation rho
+
+% data:  both.2$x and both.2$log.likelihood 
+% S = 154, p-value = 0.463
+% alternative hypothesis: true rho is not equal to 0 
+% sample estimates:
+%        rho 
+% -0.2833333 
+
+% [1] "wikipedia10k"
+
+% 	Spearman's rank correlation rho
+
+% data:  both.2$x and both.2$log.likelihood 
+% S = 146, p-value = 0.5809
+% alternative hypothesis: true rho is not equal to 0 
+% sample estimates:
+%        rho 
+% -0.2166667 
+
+
+
