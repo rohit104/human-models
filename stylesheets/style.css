@@ -3,6 +3,13 @@ a.tag {
     text-decoration: none;
 }
 
+a.instruction_toggle {
+    color : darkcyan;
+    display: block;
+    text-align : right;
+    text-decoration : none;
+}
+
 a.chosen {
     background-color : red;
 }
@@ -21,6 +28,14 @@ h1.error {
     border-style : dashed;
     background-color : pink;
     border-color : red;
+}
+
+div.instructions {
+    border: solid;
+    border-style : dashed;
+    background-color : lightblue;
+    border-color : darkcyan;
+    display : none;
 }
 
 div.snippet { 

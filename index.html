@@ -18,6 +18,8 @@
 
          var form_word = document.getElementById("form_word");
         form_word.value = word;
+         var form_word_string = document.getElementById("form_word_string");
+        form_word_string.value = elem.innerHTML;
       }
     }
     function chooseTopic(topic) {
@@ -26,8 +28,54 @@
         var form = document.getElementById("form");
         form.submit();
     }
+
+    function toggleInstructions() {
+        var instr_elem = document.getElementById("instructions");
+        var instr_toggle_elem = document.getElementById("instruction_toggle"); 
+        if (instr_elem.style.display == "") {
+           instr_elem.style.display = "block";
+           instr_toggle_elem.innerHTML = "Hide HIT instructions";
+        } else {
+           instr_elem.style.display = "";
+           instr_toggle_elem.innerHTML = "Show HIT instructions";
+        }
+    }
   </script>
   <body>
+    <a class="instruction_toggle" 
+       href="javascript:toggleInstructions();" id="instruction_toggle">
+      Show HIT instructions</a>
+    <div class="instructions" id="instructions">
+      In this task you will be asked to "tag" documents and group
+      these tags into "tag groups."
+      <ul>
+	<li> You will be shown a snippet from a document along with its title.
+	<li> Click on a word in the document which helps to express
+	what the document is about.  Doing so will assign the word as
+	a "tag" for the document.
+	<li> Words highlighted in red cannot be chosen for the tag.
+	<li> Once you have selected a tag for a document, you will be
+	shown five groups of tags, or "tag groups."  Each tag group
+	may contain up to six words.  Some or all of the tag groups
+	may be empty.
+	<li> Please select the tag group in which your chosen tag
+	would best fit.  Make your assignment based on the sense of
+	the word in the current document.  For example, if you tag an
+	astronomy document with the word "star", you would assign your
+	word to the tag group {"planet", "solar", "meteor"}, <b>NOT</b>
+	than the tag group {"celebrity", "paparazzi", "pop"}.
+	<li> Please assign a tag to a tag group based on meaning
+	rather than spelling, pronunciation, or grammatical function.
+	For example, you would <b>NOT</b> assign the tag "swim" to the tag
+	group {"swan", "skunk"} just because they all start with "s".
+	Instead, you would prefer to assign the tag to the tag group
+	{"water", "pool"}.
+	<li> If an empty tag group is available, you may assign your
+	tag to it if you think none of the other tag groups is a good
+	fit for your tag.
+      </ul>
+    </div>
+       
     <h3>Please select a word to use as this document's tag.</h3>
     <div class="snippet_title">
       {{ title }}
@@ -57,6 +105,7 @@
       <input type="hidden" name="user_id" value="{{user_id}}">
       <input type="hidden" name="word" id="form_word">
       <input type="hidden" name="topic" id="form_topic">
+      <input type="hidden" name="word_string" id="form_word_string">
     </form>
   </body>
 </html>

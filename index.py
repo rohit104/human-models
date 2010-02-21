@@ -72,6 +72,7 @@ class RecordResult(webapp.RequestHandler):
         tag.word = int(self.request.get("word"))
         tag.user_id = int(self.request.get("user_id"))
         tag.document_id = int(self.request.get("document_id"))
+        tag.word_string = self.request.get("word_string").lower()
         tag.put()
         self.redirect('/?user_id=%s' % self.request.get("user_id"))
 
