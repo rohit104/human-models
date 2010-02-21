@@ -1,0 +1,62 @@
+<html>
+  <title>Document Tagging</title>
+  <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+  <script>
+    var chosen_word = -1;
+    function chooseWord(word) {
+      if (chosen_word != -1) {
+        return;
+      }
+      var elem = document.getElementById("word_" + word);
+      if (elem.className == "tag") {
+        elem.className = "tag chosen";
+        chosen_word = word;
+        var topic_elem = document.getElementById("topic_container");
+        topic_elem.style.display = "block";
+        var selected_tag_elem = document.getElementById("selected_tag");
+        selected_tag_elem.innerHTML = elem.innerHTML;
+
+         var form_word = document.getElementById("form_word");
+        form_word.value = word;
+      }
+    }
+    function chooseTopic(topic) {
+        var form_topic = document.getElementById("form_topic");
+        form_topic.value = topic;
+        var form = document.getElementById("form");
+        form.submit();
+    }
+  </script>
+  <body>
+    <h3>Please select a word to use as this document's tag.</h3>
+    <div class="snippet_title">
+      {{ title }}
+    </div>
+    <div class="snippet">
+      {{ snippet }}
+    </div>
+    <div class="topic_container" id="topic_container">
+      <h3>
+	You have selected to tag this
+        document <span class="selected_tag"
+        id="selected_tag">FIXME</span>.  Choose the group of tags
+        below which best corresponds to the sense of the tag in this
+        document.  If the tag does not fit in any non-empty set, you
+        may place it into an empty tag group if one is available.
+      </h3>
+{% for topic in topics %}
+    <a href="javascript:chooseTopic({{forloop.counter0}});" class="topic">
+      {% for word in topic %}
+      <span class="topicword">{{word}}</span>
+      {% endfor %}
+    </a>
+    {% endfor %}
+    </div>
+    <form action="/submit" method="post" id="form">
+      <input type="hidden" name="document_id" value="{{document_id}}">
+      <input type="hidden" name="user_id" value="{{user_id}}">
+      <input type="hidden" name="word" id="form_word">
+      <input type="hidden" name="topic" id="form_topic">
+    </form>
+  </body>
+</html>

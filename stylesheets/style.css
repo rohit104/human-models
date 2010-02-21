@@ -1,0 +1,67 @@
+a.tag {
+    color : white;
+    text-decoration: none;
+}
+
+a.chosen {
+    background-color : red;
+}
+
+a.tag:hover {
+    background-color : blue;
+}
+
+a.chosen:hover  {
+    background-color : red;
+}
+
+h1.error {
+    text-align: center;
+    border: solid;
+    border-style : dashed;
+    background-color : pink;
+    border-color : red;
+}
+
+div.snippet { 
+    background-color : grey;
+    color : white;
+    border : solid;
+    border-color : black;
+}
+
+div.snippet_title { 
+    font-size : 24;
+    font-variant : small-caps;
+    border : solid;
+    text-align : center;
+}
+
+span.topicword {
+    text-align : center;
+    text-decloration : none;
+    display : inline-block;
+    width : 18%;
+}
+
+a.topic {
+    background-color : lightblue;
+    border : solid;
+    border-color : white;
+    display : block;
+    color : black;
+    text-decoration : none;
+}
+
+a.topic:hover {
+    border-color : grey;
+}
+
+div.topic_container {
+     display : none;
+}
+
+span.selected_tag {
+    background-color : purple;
+    color : white;
+}
