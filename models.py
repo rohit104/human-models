@@ -13,3 +13,14 @@ class Tag(db.Model):
     user_id = db.IntegerProperty()
     word_string = db.StringProperty()
     date = db.DateTimeProperty(auto_now_add=True)
+
+class TopicStats(db.Model):
+    word = db.StringProperty()
+    topic = db.IntegerProperty()
+    count = db.IntegerProperty()
+
+class DocumentStats(db.Model):
+    document_id = db.IntegerProperty()
+    topic = db.IntegerProperty()
+    count = db.IntegerProperty()
+

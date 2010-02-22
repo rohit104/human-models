@@ -47,31 +47,36 @@
       Show HIT instructions</a>
     <div class="instructions" id="instructions">
       In this task you will be asked to "tag" documents and group
-      these tags into "tag groups."
+      these tags into "tag clusters."
       <ul>
 	<li> You will be shown a snippet from a document along with its title.
 	<li> Click on a word in the document which helps to express
-	what the document is about.  Doing so will assign the word as
-	a "tag" for the document.
+	what the document is about.  Clicking on a word will assign
+	the word as a "tag" for the document.  Note that you cannot
+	change your tag once you have selected it.
+	<li> Try to choose a tag that would help someone who is
+	searching for pages on the subject to find the current document.
+	For example, words such as "celebrity", "star", and "scandal"
+	might be good tags for an article on Paris Hilton.
 	<li> Words highlighted in red cannot be chosen for the tag.
 	<li> Once you have selected a tag for a document, you will be
-	shown five groups of tags, or "tag groups."  Each tag group
-	may contain up to six words.  Some or all of the tag groups
-	may be empty.
-	<li> Please select the tag group in which your chosen tag
+	shown between one and ten groups of tags, or "tag clusters."
+	Each tag cluster may contain up to six words.  Some or all of
+	the tag clusters may be empty.
+	<li> Please select the tag cluster in which your chosen tag
 	would best fit.  Make your assignment based on the sense of
 	the word in the current document.  For example, if you tag an
 	astronomy document with the word "star", you would assign your
-	word to the tag group {"planet", "solar", "meteor"}, <b>NOT</b>
-	than the tag group {"celebrity", "paparazzi", "pop"}.
-	<li> Please assign a tag to a tag group based on meaning
+	word to the tag cluster {"planet", "solar", "meteor"}, <b>NOT</b>
+	the tag cluster {"celebrity", "paparazzi", "pop"}.
+	<li> Please assign a tag to a tag cluster based on meaning
 	rather than spelling, pronunciation, or grammatical function.
 	For example, you would <b>NOT</b> assign the tag "swim" to the tag
-	group {"swan", "skunk"} just because they all start with "s".
-	Instead, you would prefer to assign the tag to the tag group
+	cluster {"swan", "skunk"} just because they all start with "s".
+	Instead, you would prefer to assign the tag to the tag cluster
 	{"water", "pool"}.
-	<li> If an empty tag group is available, you may assign your
-	tag to it if you think none of the other tag groups is a good
+	<li> If an empty tag cluster is available, you may assign your
+	tag to it if you think none of the other tag cluster is a good
 	fit for your tag.
       </ul>
     </div>
@@ -90,11 +95,12 @@
         id="selected_tag">FIXME</span>.  Choose the group of tags
         below which best corresponds to the sense of the tag in this
         document.  If the tag does not fit in any non-empty set, you
-        may place it into an empty tag group if one is available.
+        may place it into an empty tag cluster if one is available.
       </h3>
-{% for topic in topics %}
-    <a href="javascript:chooseTopic({{forloop.counter0}});" class="topic">
-      {% for word in topic %}
+    {% for topic in topics %}
+     <a href="javascript:chooseTopic({{topic.topic}});" class="topic">
+       &nbsp;
+      {% for word in topic.words %}
       <span class="topicword">{{word}}</span>
       {% endfor %}
     </a>

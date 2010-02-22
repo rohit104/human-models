@@ -5,49 +5,65 @@ import os
 from google.appengine.ext.webapp import template
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.ext import db
 import models
+import random
+import logging
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        already_selected = set([4, 8, 15, 16, 23, 42])
-        
         user_id = self.request.get("user_id")
         if not user_id:
             path = os.path.join(os.path.dirname(__file__), 'invalid_userid.html')
             self.response.out.write(template.render(path, {}))
             return
 
-        template_values = {
-            'topics' : [["meow"], ["meep"]],
-            'title' : "Lorem ipsum",
-            'document_id' : 314159,
-            'user_id' : user_id,
-'snippet' : """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec
-tempus lorem. Morbi tristique nisi sit amet nulla dapibus
-luctus. Nullam id nunc quis eros ornare rhoncus sit amet quis
-nisl. Phasellus in turpis nec dolor pellentesque
-elementum. Pellentesque at lorem et sapien dictum vestibulum. Fusce
-augue erat, ornare vitae eleifend a, ultrices ut dui. Nunc blandit
-velit ac neque ullamcorper eleifend. Sed at est lectus, id adipiscing
-felis. Suspendisse justo ipsum, varius id fringilla sed, convallis a
-erat. Etiam quis ipsum lacus, non tincidunt leo. Morbi euismod
-ullamcorper neque, non venenatis risus lacinia vel. Nam faucibus
-imperdiet blandit.
+        random.seed(8675309)
 
-Proin tempus, ipsum nec hendrerit vehicula, eros sapien euismod
-ligula, nec vulputate est mi sagittis mi. Pellentesque tincidunt,
-velit et ornare cursus, turpis neque mattis arcu, quis tempor lectus
-ipsum vitae nunc. Curabitur mattis lorem vel diam imperdiet
-imperdiet. Phasellus vehicula auctor cursus. Curabitur ipsum eros,
-semper nec euismod sed, vestibulum a mauris. Integer semper mi ut eros
-pharetra tristique. Vivamus ante eros, viverra vitae commodo non,
-egestas quis odio. Ut non metus id mi condimentum ornare. Cras vel
-nulla metus, non adipiscing ipsum. Proin facilisis diam id lorem
-volutpat in tincidunt purus tincidunt. Integer scelerisque rhoncus
-nisl, ac dignissim nunc vestibulum ut. Quisque sed justo erat.
-"""
-}
+        ids = db.GqlQuery("select __key__ from Document")
+        ids = ids.fetch(100)
+        chosen_id = random.choice(ids)
+        document = models.Document.get(chosen_id)
+
+        top_topics = db.GqlQuery("select * from DocumentStats where document_id = %d order by count desc" % document.document_id)
+
+        num_topics = 10
+        top_topics = top_topics.fetch(num_topics)
+        ## select at most 5
+        real_top_topics = [x.topic for x in top_topics[:5]]
+
+        ## find empties
+        unused_topics = set(range(num_topics)) - set([x.topic for x in top_topics])
+        ## pad with empties if we don't have enough
+        if len(real_top_topics) < 5:
+            padding = list(unused_topics)[:(5 - len(real_top_topics))]
+            real_top_topics += padding
+        ## FIXME: clean up this logic!!
+        ## if there are any available topics, make sure they see at
+        ## least one empty
+        elif len(unused_topics) > 0:
+            real_top_topics[4] = list(unused_topics)[0]
+            
+        top_topic_words = []
+        for tt in real_top_topics:
+            logging.info("Querying for topic %d" % tt)
+            topic_words = db.GqlQuery("select * from TopicStats where topic = %d order by count desc" % tt)
+            top_topic_words.append({'topic' : tt, 'words' : [x.word for x in topic_words.fetch(5)]})
+
+        ## Get the already selected!
+        already_selected = db.GqlQuery("select * from Tag where document_id = %d" % document.document_id)
+        already_selected.fetch(1000)
+
+        ## Do something if they've all been already selected!
+        already_selected = [x.word for x in already_selected]
+            
+        template_values = {
+            'topics' : top_topic_words,
+            'title' : document.title,
+            'document_id' : document.document_id,
+            'user_id' : user_id,
+            'snippet' : document.body.replace("\\n", "\n"),
+        }
         num_words = 0
         new_snippet = ""
         for mm in re.finditer(r'(\w+|\W+)', template_values['snippet']):
@@ -67,13 +83,39 @@ nisl, ac dignissim nunc vestibulum ut. Quisque sed justo erat.
 
 class RecordResult(webapp.RequestHandler):
     def post(self):
+        document_id = int(self.request.get("document_id"))
+        topic = int(self.request.get("topic"))
+        word_string = self.request.get("word_string").lower()
+
         tag = models.Tag()
-        tag.topic = int(self.request.get("topic"))
+        tag.topic = topic
         tag.word = int(self.request.get("word"))
         tag.user_id = int(self.request.get("user_id"))
-        tag.document_id = int(self.request.get("document_id"))
-        tag.word_string = self.request.get("word_string").lower()
+        tag.document_id = document_id
+        tag.word_string = word_string
         tag.put()
+        
+        document_stat = models.DocumentStats.gql("WHERE document_id = %d and topic = %d" % 
+                                                 (document_id, topic)).get()
+        if not document_stat:
+            document_stat = models.DocumentStats()
+            document_stat.document_id = document_id
+            document_stat.topic = topic
+            document_stat.count = 1
+        else:
+            document_stat.count = document_stat.count + 1
+        document_stat.put()
+
+        topic_stat = models.TopicStats.gql("WHERE topic = %d and word = '%s'" % (topic, word_string)).get()
+        if not topic_stat:
+            topic_stat = models.TopicStats()
+            topic_stat.topic = topic
+            topic_stat.word = word_string
+            topic_stat.count = 1
+        else:
+            topic_stat.count = topic_stat.count + 1
+        topic_stat.put()
+
         self.redirect('/?user_id=%s' % self.request.get("user_id"))
 
 application = webapp.WSGIApplication([('/', MainPage),
