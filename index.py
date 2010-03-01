@@ -31,8 +31,12 @@ class MainPage(webapp.RequestHandler):
 #             ver.put()
 
             key = db.GqlQuery("select * from Verification where user_id = %d" % int(user_id))
+            if key.get() is None:
+                key = int(user_id) * 31 - 17
+            else:
+                key = key.get().verification_code
             path = os.path.join(os.path.dirname(__file__), 'finished.html')
-            self.response.out.write(template.render(path, {'key' : key.get().verification_code }))
+            self.response.out.write(template.render(path, {'key' : key }))
             return
             
 
