@@ -30,6 +30,18 @@ h1.error {
     border-color : red;
 }
 
+h1.finished {
+    text-align: center;
+    border: solid;
+    border-style : dashed;
+    background-color : lightcyan;
+    border-color : blue;
+}
+
+span.finished_key {
+  background-color : orange;
+}
+
 div.instructions {
     border: solid;
     border-style : dashed;
@@ -79,4 +91,9 @@ div.topic_container {
 span.selected_tag {
     background-color : purple;
     color : white;
+}
+
+div.progress {
+    color : darkcyan;
+    float:left;
 }

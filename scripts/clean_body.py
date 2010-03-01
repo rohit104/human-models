@@ -22,7 +22,7 @@ if __name__ == "__main__":
         # Remove everything past the first section
         line[2] = re.sub(r'=.*', r'', line[2])
 
-        m = re.match('((\w+\W+){150})', line[2])
+        m = re.match(r'(\W*(\w+\W+){150})', line[2])
         if m:
             line[2] = m.group(1) + "..."
 
@@ -30,6 +30,7 @@ if __name__ == "__main__":
 
         line[1] = line[1].encode("utf-8")
         line[2] = line[2].encode("utf-8")
+            
         csv_writer.writerow(line)
             
 

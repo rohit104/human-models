@@ -6,6 +6,11 @@ class Document(db.Model):
     document_id = db.IntegerProperty()
     date = db.DateTimeProperty(auto_now=True)
 
+class Verification(db.Model):
+    user_id = db.IntegerProperty()
+    verification_code = db.IntegerProperty()
+    date = db.DateTimeProperty(auto_now=True)
+
 class Tag(db.Model):
     word = db.IntegerProperty()
     topic = db.IntegerProperty()
