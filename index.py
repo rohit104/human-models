@@ -46,7 +46,7 @@ class MainPage(webapp.RequestHandler):
 
         ## NUKER !!!! ##
 #        for ii in range(10000):
-#            ids = db.GqlQuery("select __key__ from Document")
+#            ids = db.GqlQuery("select __key__ from Tag")
 #            db.delete(ids.fetch(200))
 #            time.sleep(0.5)
 
@@ -55,8 +55,9 @@ class MainPage(webapp.RequestHandler):
         chosen_id = random.choice(ids)
         document = models.Document.get(chosen_id)
 
+        num_topics = 15
         top_topic_words = {}
-        for tt in range(10):
+        for tt in range(num_topics):
             logging.info("Querying for topic %d" % tt)
             topic_words = db.GqlQuery("select * from TopicStats where topic = %d order by count desc" % tt)
             top_topic_words[tt] = [x.word for x in topic_words.fetch(5)]
@@ -65,7 +66,6 @@ class MainPage(webapp.RequestHandler):
 
         top_topics = db.GqlQuery("select * from DocumentStats where document_id = %d order by count desc" % document.document_id)
 
-        num_topics = 10
         top_topics = top_topics.fetch(num_topics)
         top_topics = [x.topic for x in top_topics]
 
