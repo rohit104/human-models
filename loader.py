@@ -18,4 +18,15 @@ class VerificationLoader(bulkloader.Loader):
                                     ('verification_code', int)])
 
 loaders = [DocumentLoader, VerificationLoader]
-                                    
+
+class TagExporter(bulkloader.Exporter):
+    def __init__(self):
+        bulkloader.Exporter.__init__(self, 'Tag',
+                                     [('word', str, None),
+                                      ('topic', str, None),
+                                      ('document_id', str, None),
+                                      ('user_id', str, None),
+                                      ('word_string', str, None),
+                                      ('date', str, None)])
+
+exporters = [TagExporter]
