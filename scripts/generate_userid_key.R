@@ -3,7 +3,8 @@
 N <- 100
 ## set.seed(8675309)
 ## set.seed(314159)
-set.seed(1234567)
+## set.seed(1234567)
+set.seed(7654321)
 userid <- runif(N, 0, 100000)
 key <- runif(N, 0, 100000)
 
