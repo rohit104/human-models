@@ -57,10 +57,10 @@ belong with the others, i.e., the \emph{intruder}.
 Figure~\ref{fig:intruding_word} shows how this task is presented to
 users.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
 
-\includegraphics[width=0.90\textwidth]{figures/screenshots}
+\includegraphics[width=0.90\textwidth]{figures/screenshots.png}
 
 \caption{Screenshots of our two human tasks. In the word intrusion
   task (left), subjects are presented with a set of words and asked to
@@ -69,7 +69,7 @@ users.
   title and the first few sentences of the document.  The users must
   select which of the four groups of words does not belong.}
 \label{fig:intruding_word}
-\end{figure}
+\end{figure*}
 
 When the set of words minus the intruder makes sense together, then
 the subject should easily identify the intruder.  For example, most
@@ -109,61 +109,6 @@ rarity).  All six words are then shuffled and presented to the subject.
 % as predicted by the topic model matched what the subjects thought was
 % the intruder, then the topic found by the topic model resembles a set
 % that our subjects believe is semantically coherent.
-
-\subsection{Topic intrusion}
-\label{sec:topicintrusion}
-% \subsection{Topic labeling}
-
-The \emph{topic intrusion} task tests whether a topic model's
-decomposition of documents into a mixture of topics agrees with human
-judgments of the document's content.  This allows for evaluation
-of the latent space depicted by Figure~\ref{fig:nyttopics:doc}.  In
-this task, subjects are shown the title and a snippet from a document.
-Along with the document they are presented with four topics (each
-topic is represented by the eight highest-probability words within
-that topic).  Three of those topics are the highest probability topics
-assigned to that document.  The remaining \emph{intruder topic} is
-chosen randomly from the other low-probability topics in the model.
-
-% document consisting of twenty unique ``query'' words selected by
-% tf-idf score and five context words on either side of it.  They are
-% asked to select which of six topics most closely matches the query,
-% where each topic is represented by six words.  See
-% Figure~\ref{fig:topic_relevance} for an example of this task.  The
-% available topics are the five topics the model weighted highest for
-% this document or, if the model used fewer than five topics, the number
-% of topics is expanded by selecting topics from the full set of
-% possible topics.
-
-% \begin{figure}[t]
-% %%Figure goes here.
-% \centering
-% \includegraphics[width=\textwidth]{figures/context.png}
-% \caption{In the \emph{Topic Intrusion} task, users are given a query
-% word, with context, and asked to select the topic most closely related
-% to this word in its given context.}
-% \label{fig:topic_relevance}
-% \end{figure}
-
-The subject is instructed to choose the topic which does not belong
-with the document.  As before, if the topic assignment to documents
-were relevant and intuitive, we would expect that subjects would
-select the topic we randomly added as the topic that did not belong.
-The formulation of this task provides a natural way to analyze the
-quality of document-topic assignments found by the topic models.  Each
-of the three models we fit explicitly assigns topic weights to each
-document; this task determines whether humans make the same
-association.
-
-Due to time constraints, subjects do not see the entire document; they only
-see the title and first few sentences.  While this is less information than is
-available to the algorithm, humans are good at extrapolating from limited
-data, and our corpora (encyclopedia and newspaper) are structured to provide
-an overview of the article in the first few sentences.  The setup of this task
-is also meaningful in situations where one might be tempted to use topics for
-corpus exploration.  If topics are used to find relevant
-documents, for example, users will likely be provided with similar views of the
-documents (e.g. title and abstract, as in Rexa).
 
 % While this
 % approach also requires that models are able to select coherent topics,

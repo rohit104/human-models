@@ -41,28 +41,28 @@ for the corpus and a collection of topic proportions for each of its
 documents.  While this common latent space has explored for over two decades,
 its interpretability remains unmeasured.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
 %  \hspace{-5cm}
 \subfigure[Topics]{
   \includegraphics[scale=0.35]{figures/nyt_topics.pdf}
   \label{fig:nyttopics:topic}
 }
-    \hspace{0.4in}
-    \subfigure[Document Assignments to Topics]{
-      \includegraphics[scale=0.35]{figures/nyt_documents.pdf}
-      \label{fig:nyttopics:doc}
-    }
-    \caption{The latent space of a topic model consists of topics,
-      which are distributions over words, and a distribution over these
-      topics for each document.  On the left are three topics from a
-      fifty topic LDA model trained on articles from the New York
-      Times.  On the right is a simplex depicting the distribution
-      over topics associated with seven documents.  The line from each
-      document's title shows the document's position in the topic
-      space.}
+\hspace{0.4in}
+\subfigure[Document Assignments to Topics]{
+  \includegraphics[scale=0.35]{figures/nyt_documents.pdf}
+  \label{fig:nyttopics:doc}
+}
+\caption{The latent space of a topic model consists of topics,
+  which are distributions over words, and a distribution over these
+  topics for each document.  On the left are three topics from a
+  fifty topic LDA model trained on articles from the New York
+  Times.  On the right is a simplex depicting the distribution
+  over topics associated with seven documents.  The line from each
+  document's title shows the document's position in the topic
+  space.}
 \label{fig:nyttopics:big}
-\end{figure}
+\end{figure*}
 
 
 % cw: i mask the following paragraph, it seems duplicated with the next subsection
