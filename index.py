@@ -45,10 +45,10 @@ class MainPage(webapp.RequestHandler):
 #        random.seed(8675309)
 
         ## NUKER !!!! ##
-#        for ii in range(1000):
-#            ids = db.GqlQuery("select __key__ from TopicStats")
-#            db.delete(ids.fetch(200))
-#            time.sleep(0.5)
+#         for ii in range(100):
+#             ids = db.GqlQuery("select __key__ from Tag")
+#             db.delete(ids.fetch(200))
+#             time.sleep(0.5)
 
         ids = db.GqlQuery("select __key__ from Document offset 100")
         ids = ids.fetch(200)
@@ -56,7 +56,7 @@ class MainPage(webapp.RequestHandler):
         chosen_id = random.choice(ids)
         document = models.Document.get(chosen_id)
 
-        num_topics = 15
+        num_topics = 10
         top_topic_words = {}
         for tt in range(num_topics):
             logging.info("Querying for topic %d" % tt)
