@@ -1,6 +1,5 @@
-\section{Topic models and their evaluations}
+\section{Topic models and Inference}
 \label{sec:models}
-%% \subsection{Topic models in a nutshell}
 
 % Topic models discover patterns of word usage in a corpus.  Related
 % words often appear in similar documents, and topic models can discover
@@ -25,25 +24,22 @@
 
 Topic models posit that each document is expressed as a mixture of
 topics.  These topic proportions are drawn once per document, and the
-topics are shared across the corpus.  In this paper we will consider
-topic models that make different assumptions about the topic
-proportions.  Probabilistic Latent Semantic Indexing
-(pLSI)~\cite{hofmann-99} makes no assumptions about the document topic
-distribution, treating it as a distinct parameter for each document.
-Latent Dirichlet allocation (LDA)~\cite{blei-03} and the correlated
-topic model (CTM)~\cite{blei-06} treat each document's topic
-assignment as a multinomial random variable drawn from a symmetric
-Dirichlet and logistic normal prior, respectively.
+topics are shared across the corpus.  There are many instantiations of
+topic models which make differnet modeling assumptions latent semantic
+analysis (LSA)~\cite{landauer-97}, latent semantic indexing
+(LSI)~\cite{deerwester-90}.  In this paper we consider Latent
+Dirichlet allocation (LDA)~\cite{blei-03} which treats each document's
+topic assignment as a multinomial random variable drawn from a
+symmetric Dirichlet and logistic normal prior, respectively.
 
-While the models make different assumptions, inference algorithms for all of
-these topic models build the same type of latent space: a collection of topics
-for the corpus and a collection of topic proportions for each of its
-documents.  While this common latent space has explored for over two decades,
-its interpretability remains unmeasured.
+Inference algorithms for all of these topic models build the same type
+of latent space: a collection of topics for the corpus and a
+collection of topic proportions for each of its documents.  While this
+common latent space has explored for over two decades, its
+interpretability remains unmeasured.
 
 \begin{figure*}[t]
 \centering
-%  \hspace{-5cm}
 \subfigure[Topics]{
   \includegraphics[scale=0.35]{figures/nyt_topics.pdf}
   \label{fig:nyttopics:topic}
@@ -64,47 +60,72 @@ its interpretability remains unmeasured.
 \label{fig:nyttopics:big}
 \end{figure*}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.7\linewidth]{figures/lda}
+\caption{A graphical model depiction of latent Dirichlet allocation
+  (LDA).  Plates denote replication.  Shaded circles denote observed
+  variables and unshaded circles denote hidden variables.}
+\label{fig:lda}
+\end{figure}
 
-% cw: i mask the following paragraph, it seems duplicated with the next subsection
+Formally, the generative process of LDA is as follows:
+\begin{enumerate*}
+  \item For each topic $k$, 
+    \begin{enumerate*}
+    \item Draw topic $\beta_k \sim \mathrm{Dir}(\eta)$
+    \end{enumerate*}
+  \item For each document $d$, 
+    \begin{enumerate*}
+    \item Draw topic proportions $\theta_d \sim \mathrm{Dir}(\alpha)$
+    \item For each word $w_{d, n}$, 
+      \begin{enumerate*}
+      \item Draw topic assignment $z_{d,n} \sim \mathrm{Mult}(\theta_d)$
+      \item Draw word $w_{d,n} \sim \mathrm{Mult}(\beta_{z_{d,n}})$
+      \end{enumerate*}
+    \end{enumerate*}
+\end{enumerate*}
+The parameters of the model are the number of topics, $K$, as well as
+the Dirichlet priors on the topic-word distributions and
+document-topic distributions, $\alpha$ and $\eta$.  The only observed
+variables of the model are the words, $w_{d,n}$.  The remaining
+variables must be inferred.
 
-%Because the field of topic models is so vibrant, we cannot mention
-%every variant or application.  Considered broadly, topic models
-%encompass everything from a mixture of unigrams~\cite{Nigam-00} to
-%hierarchical non-parametric methods~\cite{blei-07} and have found
-%applications in collaborative filtering~\cite{Marlin:2004}, computer
-%vision~\cite{feifei:hdp}, and genetics~\cite{populationstructure}.
+There are several techniques for performing posterior inference,
+i.e., inferring the distribution over hidden variables given a
+collection of documents, including variational
+inference~\cite{blei-03} and Gibbs sampling~\cite{griffiths-06}.  In
+the sequel, we focus on the latter approach.  
 
-% jbg: More detail about LDA / CTM?  I'll leave that until later, I guess.
+Collapsed Gibbs sampling for LDA treats the topic-word and
+document-topic distributions, $\theta_d$ and $\beta_k$, as nuisance
+variables to be marginalized out. The posterior distribution over the
+remaining latent variables, the topic assignments $z_{d,n}$, can be
+expressed as
+\begin{eqnarray*}
+  &&p(\bm{z} | \alpha, \eta, \bm{w}) \propto \\
+  &&\qquad \prod_{d}\prod_{k} \left[ \Gamma(n_{d,k} + \alpha_{k})\frac{\Gamma(\eta_{w_{d,n}} + n_{w_{d,n}, k})}{\Gamma(\sum_w n_{w, k} + \eta_w)}\right],
+\end{eqnarray*}
+where $n_{d,k}$ denotes the number of words in document $d$ assigned
+to topic $k$ and $n_{w,k}$ the number of times word $w$ is assigned to
+topic $k$.  This leads to the sampling equations,
+\begin{eqnarray}
+  &&p(z_{d,i} = k | \alpha, \eta, \bm{w}, \bm{z}y) \propto \\
+  &&\qquad (n^{\lnot d,i}_{d,k} + \alpha_{k})\frac{\eta_{w_{d,i}} + n^{\lnot d,i}_{w_{d,i}, k}}{\sum_w n^{\lnot d,i}_{w, k} + \eta_w},
+  \label{eq:sampling}
+\end{eqnarray}
+where the superscript $\lnot d,i$ indicates that these statistics
+should exclude the current variable under consideration, $z_{d,i}$.
 
-% jbg: I had originally planned to put in DTM, SLDA, etc. here, but
-% now I'm thinking that would distract from the flow.  Perhaps that
-% best belongs in the intro?
+In essence, the model performs inference by looking at each word in
+succession, and probabilistically assigning it to a topic according to
+\myeq{eq:sampling}.  \myeq{eq:sampling} is derived through the
+modeling assumptions and choice of parameters.  Now the question is,
+when humans are given a similar assignment, to assign words to
+clusters, will their own sampling equations follow \myeq{eq:sampling}
+or will they be different, reflecting different underlying assumptions
+about the data.
 
-
-% An introduction to topic models must begin with latent semantic
-% analysis , which came from the psychology
-% community.  Although we focus on later probabilistic topic models, LSA
-% laid the foundation for those models and set important precedents for
-% evaluation, so we briefly mention its assumptions.  LSA represents a
-% corpus as a matrix $X$ where $X_{i,j}$ is the number of times word $j$
-% appears in document $j$.  This matrix is then approximated using
-% singular value decomposition.
-
-\subsection*{Pay no attention to the latent space behind the model}
-
-Although we focus on probabilistic topic models, the field began in
-earnest with latent semantic analysis (LSA)~\cite{landauer-97}.  LSA,
-the basis of pLSI's probabilistic formulation, uses linear algebra to
-decompose a corpus into its constituent themes.  Because LSA
-originated in the psychology community, early evaluations focused on
-replicating human performance or judgments using LSA: matching
-performance on standardized tests, comparing sense distinctions, and
-matching intuitions about synonymy (these results are reviewed
-in~\cite{landauer-02}).  In information retrieval, where LSA is known
-as latent semantic indexing (LSI)~\cite{deerwester-90}, it is able to
-match queries to documents, match experts to areas of expertise, and
-even generalize across languages given a parallel
-corpus~\cite{berry-95}.
 
 The reticence to look under the hood of these models has persisted
 even as models have moved from psychology into computer science with
@@ -149,14 +170,3 @@ motivated work that attempts to automatically label
 topics~\cite{mei-07}.  Our goal is to measure the success of
 interpreting topic models across number of topics and modeling
 assumptions.
-
-
-% jbg: Does JSTOR have something we can cite yet?
-
-% dmb: above, i think that rexa etc should be cited earlier. (see the
-% dmb in the intro.)  i wonder if a variant of that last paragraph can
-% appear in the introduction and then merely be reiterated here.  this
-% is on p3, which isn't so bad, but p1 is better.
-
-%\subsection{Examining Topic Coherence and Document Relevance}
-%\label{sec:coherence}
