@@ -1,16 +1,16 @@
 \section{Experimental results}
 \label{sec:experiments}
 
-We conducted our experiments using Amazon Mechanical
-Turk~\footnote{http://www.mturk.com}, which allows workers (our pool
-of prospective subjects) to perform small jobs for a fee through a Web
-interface.  No specialized training or knowledge is typically expected
-of the workers.  Amazon Mechanical Turk has been successfully used in
-the past to develop gold-standard data for natural language
-processing~\cite{snow-08} and to label images~\cite{imagenet-cvpr09}.
+We conducted our experiments using Amazon Mechanical Turk, which
+allows workers (our pool of prospective subjects) to perform small
+jobs for a fee through a Web interface.  No specialized training or
+knowledge is typically expected of the workers.  Amazon Mechanical
+Turk has been successfully used in the past to develop gold-standard
+data for natural language processing~\cite{snow-08}.
+% and to label images~\cite{imagenet-cvpr09}.
 
 We prepare two randomly-chosen, 100-document subsets of English
-Wikipedia~\footnote{http://en.wikipedia.org}.  For convenience, we
+Wikipedia.  For convenience, we
 denote these two sets of documents as \emph{set1} and \emph{set2}.
 For each document, we keep only the first 150 words for our
 experiments.  Because of the encyclopedic nature of the corpus, the
@@ -39,17 +39,18 @@ completing an order of magnitude more HITs than other particpants.
 
 \begin{figure*}
 \centering
-\subfigure[\emph{set1}, $K = 10$]{\includegraphics[width = .24\linewidth]{figures/histogram_1}}%
-\subfigure[\emph{set1}, $K = 15$]{\includegraphics[width = .24\linewidth]{figures/histogram_2}}%
-\subfigure[\emph{set2}, $K = 10$]{\includegraphics[width = .24\linewidth]{figures/histogram_4}}%
-\subfigure[\emph{set2}, $K = 15$]{\includegraphics[width = .24\linewidth]{figures/histogram_3}}%
+\vspace{-0.10in}
+\subfigure[\emph{set1}, $K = 10$]{\includegraphics[width = .22\linewidth]{figures/histogram_1}}%
+\subfigure[\emph{set1}, $K = 15$]{\includegraphics[width = .22\linewidth]{figures/histogram_2}}%
+\subfigure[\emph{set2}, $K = 10$]{\includegraphics[width = .22\linewidth]{figures/histogram_4}}%
+\subfigure[\emph{set2}, $K = 15$]{\includegraphics[width = .22\linewidth]{figures/histogram_3}}%
 \caption{The number of HITs performed by participant. Between 12 and 30 people participated in each experiment.}
 \label{fig:hists}
 \end{figure*}
 
 \begin{figure}
 \centering
-\includegraphics[width = .9\linewidth]{figures/hit_times}
+\includegraphics[width = .75\linewidth]{figures/hit_times}
 \caption{The distribution of times taken per HIT.  Each series represents a different experiment.  The bulk of the tags took less than one minute and more than a few seconds.}
 \label{fig:times}
 \end{figure}
@@ -137,8 +138,8 @@ australia & knee & british & israel & set \\ \hline
 
 \begin{figure*}
 \centering
-\subfigure[$K = 10$]{\includegraphics[width = .42\linewidth]{figures/entropy_K10}}%
-\subfigure[$K = 15$]{\includegraphics[width = .42\linewidth]{figures/entropy_K15}}
+\subfigure[$K = 10$]{\includegraphics[width = .4\linewidth]{figures/entropy_K10}}%
+\subfigure[$K = 15$]{\includegraphics[width = .4\linewidth]{figures/entropy_K15}}
 
 \caption{A comparison of the entropy of distributions drawn from a
   Dirichlet versus the entropy of the topic proportions inferred by
@@ -319,3 +320,66 @@ likely to pull words from only a small number of topics, regardless of
 how many topics are available, whereas a model will continue to spread
 probability mass across all topics even as the number of topics
 increases.
+
+\paragraph{Improving LDA using human judgments} The results of the
+previous sections suggests that human behavior differs from that of
+LDA, and that humans conceptualize documents in ways LDA does
+not. This motivates using the human judgments to augment the
+information available to LDA.  To do so, we initialize the topic
+assignments used by LDA's Gibbs sampler to those made by humans.  We
+then run the LDA sampler till convergence.  This provides a method to
+weakly incorporate human knowledge into the model.
+
+\begin{table}
+\footnotesize
+\centering
+\caption{The five words with the highest probability mass in each topic inferred by LDA on \emph{set1} with $\alpha = 0.2$, $K=10$, and initialized using human judgments. Each row is a topic; the most probable words are ordered from left to right.}
+\label{tab:initialize}
+\begin{tabular}{lllll}
+  line & station & lighthouse & local & main \\ 
+ \hline
+  school & history & greek & knowledge & university \\ 
+ \hline
+  catholic & church & city & roman & york \\ 
+ \hline
+  team & club & 2004 & scouting & career \\ 
+ \hline
+  engine & knee & series & medium & reaction \\ 
+ \hline
+  located & south & site & land & region \\ 
+ \hline
+  food & film & conference & north & little \\ 
+ \hline
+  february & class & born & august & 2009 \\ 
+ \hline
+  pride & portland & time & northwest & june \\ 
+ \hline
+  war & regiment & army & civil & black \\   
+\end{tabular}
+\end{table}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\linewidth]{figures/human_initialized}
+\caption{The log likelihood achieved by LDA on \emph{set1} with
+  $\alpha = 0.2$, $K=10$, and initialized using human judgments
+  (blue). The red line shows the log likelihood without incorporating
+  human judgments.  LDA with human judgments dominates LDA without
+  human judgments and helps the model converge more quickly.}
+\label{fig:initialize}
+\end{figure}
+
+\mytab{tab:initialize} shows the topics inferred by LDA when
+initialized with human judgments.  These topics resemble those
+directly inferred by humans, although as we predicted in the previous
+sections, the topic consisting of months has largely disappeared.
+Other semantically coherent topics, such as \{\texttt{located, south,
+  site, land, region}\}, have appeared in its place.
+
+\myfig{fig:initialize} shows the log-likelihood course of LDA when
+initialized by human judgments (blue), versus LDA without human
+judgments (red).  Adding human judgments strictly helps the model
+converge to a higher likelihood and converge more quickly.  In short,
+incorporating human judgments shows promise at improving both the
+interpretability and convergence of LDA.

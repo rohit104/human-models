@@ -1,4 +1,4 @@
-\section{Topic models and Inference}
+\section{Topic models and inference}
 \label{sec:models}
 
 % Topic models discover patterns of word usage in a corpus.  Related
@@ -32,15 +32,15 @@ collection of documents, will build a latent space: a collection of
 topics for the corpus and a collection of topic proportions for each
 of its documents.  
 
-\begin{figure*}[t]
+\begin{figure*}
 \centering
 \subfigure[Topics]{
-  \includegraphics[scale=0.31]{figures/nyt_topics.pdf}
+  \includegraphics[scale=0.29]{figures/nyt_topics.pdf}
   \label{fig:nyttopics:topic}
 }
 \hspace{0.4in}
 \subfigure[Document Assignments to Topics]{
-  \includegraphics[scale=0.31]{figures/nyt_documents.pdf}
+  \includegraphics[scale=0.29]{figures/nyt_documents.pdf}
   \label{fig:nyttopics:doc}
 }
 \caption{The latent space of a topic model consists of topics,
@@ -117,11 +117,10 @@ should exclude the current variable under consideration, $z_{d,i}$.
 In essence, the model performs inference by looking at each word in
 succession, and probabilistically assigning it to a topic according to
 \myeq{eq:sampling}.  \myeq{eq:sampling} is derived through the
-modeling assumptions and choice of parameters.  Now the question is,
-when humans are given a similar assignment, to assign words to
-clusters, will their own sampling equations follow \myeq{eq:sampling}
-or will they be different, reflecting different underlying assumptions
-about the data.
+modeling assumptions and choice of parameters.  By replacing
+\myeq{eq:sampling} with a different equation or with empirical
+observations, we may construct new models which reflect different
+assumptions about the underlying data.
 
 % We emphasize that not measuring the internal representation of topic
 % models is at odds with their presentation and development.  Most topic
