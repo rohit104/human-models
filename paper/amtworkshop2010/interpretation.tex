@@ -17,6 +17,13 @@
 \usepackage[compact,small]{titlesec}
 \usepackage[small]{caption}
 \usepackage{mdwlist}
+
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.95}
+
+\setlength{\abovecaptionskip}{0pt}
+
 %\setlength{\belowcaptionskip}{0pt}
 \setlength{\textfloatsep}{8pt}
 %\setlength{\floatsep}{0pt}
@@ -70,8 +77,6 @@
 
 We presented the first validation of the assumed coherence and
 relevance of topic models using human experiments.
-% This validation is only possible today because of the advent of new
-% services like Amazon Mechanical Turk.
 For three topic models, we demonstrated that traditional metrics do
 not capture whether topics are coherent or not.  Traditional metrics
 are, indeed, negatively correlated with the measures of topic quality

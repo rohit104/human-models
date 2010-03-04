@@ -2,7 +2,7 @@
 \label{sec:experiments}
 
 We conducted our experiments using Amazon Mechanical
-Turk~\footnote{http://www.mturk.com.}, which allows workers (our pool
+Turk~\footnote{http://www.mturk.com}, which allows workers (our pool
 of prospective subjects) to perform small jobs for a fee through a Web
 interface.  No specialized training or knowledge is typically expected
 of the workers.  Amazon Mechanical Turk has been successfully used in
@@ -157,6 +157,96 @@ australia & knee & british & israel & set \\
 \end{figure*}
 
 \subsection{Comparison with LDA}
+\begin{figure*}
+\centering
+\subfigure[\emph{full}, $K = 10$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_full_10}}%
+\subfigure[\emph{set1}, $K = 10$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_set1_10}}%
+\subfigure[\emph{set2}, $K = 10$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_set2_10}}
+
+\subfigure[\emph{full}, $K = 15$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_full_10}}%
+\subfigure[\emph{set1}, $K = 15$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_set1_10}}%
+\subfigure[\emph{set2}, $K = 15$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_set2_10}}
+
+\caption{The log-likelihood achieved by LDA as a function of iteration.  \emph{full} refers to a larger set of 7726 Wikipedia articles.   There is one series for each value of $\alpha \in \{0.05, 0.1, 0.2, 0.5, 1.0, 2.0\}$ from top to bottom.}
+\label{fig:ll}
+\end{figure*}
+
+\begin{table*}[ht]
+\footnotesize
+\centering
+  \caption{The five words with the highest probability mass in each topic inferred by LDA.  Each subtable shows the results for a particular experimental setup.   Each row is a topic; the most probable words are ordered from left to right.}
+\label{tab:lda-topic-samples}
+\hspace*{-.1in}
+\subfigure[\emph{set1}, $K=10$]{
+\begin{tabular}{lllll}
+born & 2004 & team & award & sydney \\ 
+  regiment & army & artillery & served & scouting \\ 
+  line & station & main & island & railway \\ 
+  region & street & located & site & knee \\ 
+  food & february & conference & day & 2009 \\ 
+  pride & greek & knowledge & portland & study \\ 
+  catholic & church & roman & black & time \\ 
+  class & series & film & actor & engine \\ 
+  travel & human & office & management & defense \\ 
+  school & born & war & world & university \\ 
+\end{tabular}
+}%
+\subfigure[\emph{set2}, $K=10$]{
+\begin{tabular}{|lllll}
+september & english & edit & nord & hockey \\ 
+  black & hole & current & england & model \\ 
+  training & program & war & election & navy \\ 
+  school & university & district & city & college \\ 
+  family & word & international & road & japan \\ 
+  publication & time & day & india & bridge \\ 
+  born & pop & world & released & march \\ 
+  won & video & microsoft & project & hungary \\ 
+  film & hair & bank & national & town \\ 
+  people & name & french & therapy & artist \\ 
+\end{tabular}
+}
+\hspace*{-.3in}
+\subfigure[\emph{set1}, $K=15$]{
+\begin{tabular}{lllll}
+time & michael & written & experience & match \\ 
+  line & station & railway & branch & knowledge \\ 
+  film & land & pass & set & battle \\ 
+  william & florida & carson & virginia & newfoundland \\ 
+  war & regiment & british & army & south \\ 
+  reaction & terminal & copper & running & complex \\ 
+  born & school & world & college & black \\ 
+  food & conference & flight & medium & rail \\ 
+  township & scouting & census & square & county \\ 
+  travel & defense & training & management & edges \\ 
+  series & actor & engine & november & award \\ 
+  pride & portland & band & northwest & god \\ 
+  team & knee & 2004 & sydney & israel \\ 
+  catholic & located & site & region & church \\ 
+  class & february & time & public & king \\ 
+\end{tabular}
+}%
+\subfigure[\emph{set2}, $K=15$]{
+\begin{tabular}{|lllll}
+family & protein & enzyme & acting & oxygen \\ 
+  england & producer & popular & canadian & sea \\ 
+  system & death & artist & running & car \\ 
+  character & series & dark & main & village \\ 
+  english & word & publication & stream & day \\ 
+  training & program & hair & students & electrical \\ 
+  district & town & city & local & kolkata \\ 
+  september & edit & music & records & recorded \\ 
+  black & pop & bank & usually & hole \\ 
+  people & choir & road & diet & related \\ 
+  war & built & navy & british & service \\ 
+  center & million & cut & champagne & players \\ 
+  born & television & current & drama & won \\ 
+  school & university & college & election & born \\ 
+  film & nord & played & league & hockey \\ 
+\end{tabular}
+}
+\end{table*}
+
+
 
 The tasks described in \mysec{sec:tasks} were offered on Amazon
 Mechanical Turk (http://www.mturk.com), 
@@ -210,14 +300,4 @@ useful for humans.  The downward sloping trend lines in
 \myfig{fig:prec_vs_lhood} implying that the models are often trading
 improved likelihood for lower interpretability.
 
-
-The model precision showed a negative correlation (Spearman's $\rho =
--0.235$ averaged across all models, corpora, and topics) with the
-number of senses in WordNet of the words displayed to the
-subjects~\cite{Miller90} and a slight positive correlation ($\rho =
-0.109$) with the average pairwise Jiang-Conrath similarity of
-words\footnote{Words without entries in WordNet were ignored; polysemy
-  was handled by taking the maximum over all senses of words.  To
-  handle words in the same synset (e.g. ``fight'' and ``battle''), the
-  similarity function was capped at 10.0.}~\cite{jiang-97}.  
 
