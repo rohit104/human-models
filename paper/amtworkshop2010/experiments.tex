@@ -1,113 +1,35 @@
 \section{Experimental results}
 \label{sec:experiments}
 
-For our experiments with Amazon Mechanical
-Turk~\footnote{http://www.mturk.com.}, we prepare two randomly-chosen,
-100-document subsets of English
+We conducted our experiments using Amazon Mechanical
+Turk~\footnote{http://www.mturk.com.}, which allows workers (our pool
+of prospective subjects) to perform small jobs for a fee through a Web
+interface.  No specialized training or knowledge is typically expected
+of the workers.  Amazon Mechanical Turk has been successfully used in
+the past to develop gold-standard data for natural language
+processing~\cite{snow-08} and to label images~\cite{imagenet-cvpr09}.
+
+we prepare two randomly-chosen, 100-document subsets of English
 Wikipedia~\footnote{http://en.wikipedia.org}.  For convenience, we
 denote these two sets of documents as \emph{set1} and \emph{set2}.
 For each document, we keep only the first 150 words for our
 experiments.  Because of the encyclopedic nature of the corpus, the
 first 150 words typically provides a broad overview of the themes in
-the article.
+the article.  We also removed from the corpus stop words and words
+which occur infrequently\footnote{Infrequently occurring words were
+  identified as those appearing fewer than eight times on a larger
+  collection of 7726 articles.}, leading to a lexicon of 8263 words.
+After this pruning \emph{set1} contained 11614 words and \emph{set2}
+contained 11318 words.
 
-To
-prepare data for human subjects to review, we fit three different
-topic models on two corpora.  In this section, we describe how we
-prepared the corpora, fit the models, and created the tasks described
-in \mysec{sec:tasks}.  We then present the results of these human
-trials and compare them to metrics traditionally used to evaluate
-topic models.
+Workers were asked to perform twenty of the taggings described in
+\mysec{sec:tasks} for each task; workers were paid \$0.25 for each
+such task.  The number of latent topics, $K$, is a free parameter.
+Here we explore two values of this parameter, $K=10$ and $K=15$,
+leading to a total of four experiments --- two for each set of
+documents and two for each value of $K$.
 
-In this work we study three topic models: probabilistic latent
-semantic indexing (pLSI)~\cite{hofmann-99}, latent Dirichlet
-allocation (LDA)~\cite{blei-03}, and the correlated topic model
-(CTM)~\cite{blei-06}, which are all mixed membership
-models~\cite{Erosheva:2004ph}.  The number of latent topics, $K$, is a free
-parameter in each of the models; here we explore this with $K=50$,
-$100$ and $150$.  The remaining parameters -- $\beta_k$, the topic
-multinomial distribution for topic $k$; and $\theta_d$, the topic
-mixture proportions for document $d$ -- are inferred from data.  The
-three models differ in how these latent parameters are inferred.
-
-\begin{list}{\textbf}{\leftmargin=0pt}
-\setlength{\itemindent}{25pt}
-\setlength{\itemsep}{0pt}
-\item[{\bf pLSI}] In pLSI, the topic mixture proportions $\theta_d$ are a parameter for
-% Conditioned on $\theta_d$, the likelihood of the observed bag of words
-% for document $d$, $\bm{w}_d$, for all three models exhibits the same
-% probabilistic form,
-% \begin{align}\label{eq:likelihood}
-% p(\bm{w}_d|\theta_d) = \prod_{n=1}^{N}\sum_{z_{n}=1}^K p(w_{n}|z_{n}, \beta_{1:K}) p(z_{n}|\theta).
-% \end{align}
-% However, the different assumptions about the mixture proportions
-% $\theta_d$ used by the three models lead to significantly different
-% latent spaces.
-  each document.  Thus, pLSI is not a fully generative model, and the number
-  of parameters grows linearly with the number of documents.
-% jc1: ???
-% Moreover due to its non-generative nature, inference needs to be
-% done in the ``folding-in'' process~\cite{hofmann-99}.
-  We fit pLSI using the EM algorithm~\cite{Dempster:1977} but
-  regularize pLSI's estimates of $\theta_d$ using pseudo-count
-  smoothing, $\alpha = 1$.  
-
-% Under these settings, the maximum \emph{a
-%     posteriori} (MAP) estimates found by pLSI correspond to those
-%   found by LDA with a symmetric Dirichlet prior on $\theta_d$ with
-%   parameter $\alpha$~\cite{Girolami-03}.
-
-\item[{\bf LDA}] LDA is a fully generative model of documents where
-  the mixture proportions $\theta_d$ are treated as a random variable
-  drawn from a Dirichlet prior
-  distribution. %that is%$\theta \sim \textrm{Dirichlet}(\alpha)$.
-% \begin{align}\label{eq:dirichlet}
-% p(\theta | \alpha) = \frac{\Gamma(\sum_{k=1}^K\alpha_k)}{\prod_{k=1}^K \Gamma(\alpha_k) } \prod_{k=1}^K\theta_k^{\alpha_k-1},
-% \end{align}
-% where $\Gamma(\cdot)$ is the Gamma function.  
-% Due to its generative nature, inference on unseen documents is
-% well-defined.  
-  Because the direct computation of the posterior is intractable, we
-  employ variational inference~\cite{blei-03} and set the symmetric
-  Dirichlet prior parameter, $\alpha$, to 1.
-
-\item[{\bf CTM}] In LDA, the components of $\theta_d$ are nearly independent
-  (i.e., $\theta_d$ is statistically neutral).
-% This leads to the possibly-unrealistic modeling assumption
-% that the presence of one topic in a document is not correlated with
-% the presence of another topic in the same document. 
-CTM allows for a richer covariance structure between topic proportions
-by using a logistic normal prior over the topic mixture proportions
-$\theta_d$.  For each topic, $k$, a real $\gamma$ is drawn from a
-normal distribution and exponentiated.  This set of $K$ non-negative
-numbers are then normalized to yield $\theta_d$.  Here, we train the
-CTM using variational inference~\cite{blei-06}.
-\end{list}
-
-% Using this formulation, CTM is able to capture the correlations among
-% different topics and provides a natural way of visualizing the topics
-% using the correlations.
-
-
-%% {\bf TODO: Chong, it seems not fair not to optimize $\alpha$ for pLSI and LDA but optimize that for CTM?}
-
-We train each model on two corpora.  For each corpus, we apply a part
-of speech tagger~\cite{schmid-94} and remove all tokens tagged as
-proper nouns (this was for the benefit of the human subjects; success
-in early experiments required too much encyclopedic knowledge).  Stop
-words~\cite{loper-02} and terms occurring in fewer than five documents
-are also removed. The two corpora we use are 1.) a collection of 8447
-articles from the \textit{New York Times} from the years 1987 to 2007
-with a vocabulary size of 8269 unique types and around one million
-tokens and 2.)  a sample of 10000 articles from \textit{Wikipedia}
-(http://www.wikipedia.org) with a vocabulary size of 15273 unique
-types and three million tokens.
-% \item \textbf{IMDB}: a collection of xxx reviews from the
-%   \textit{Internet Movie Database}
-%   (IMDb)\footnote{http://www.imdb.com/}, with a vocabulary size xxx
-%   and around xxx words.
-
-\subsection{Evaluation using conventional objective measures}
+\subsection{Tagging behavior}
 \label{sec:evalmetrics}
 
 There are several metrics commonly used to evaluate topic models in
@@ -135,62 +57,6 @@ $p(w|\hat{\theta}_d) = \sum_z p(w|z)p(z|\hat{\theta}_d)$.  Then we
 compute the average rank for the terms that actually appeared in document
 $\bm w_d$ (we follow the convention that lower rank is better).
 
-
-%\paragraph{Predictive perplexity}
-
-% The predictive perplexity of a heldout set $D_{heldout}$ given the
-% training set $D_{train}$ is defined as
-% \begin{align*} \label{eq:perplexity}
-%   {\textrm{perplexity}} = \exp\left\{-\frac{\sum_{d\in D_{\textrm{heldout}}}\log
-%       p(\textbf{w}_d|D_{\textrm{train}})}{\sum_{d\in D_{heldout}}N_d}\right\}.
-% \end{align*}
-
-
-% \begin{table}
-% \caption{Perplexity comparison for different models on three corpora.}
-% \label{fig:perplexity}
-% %\vskip 0.15in
-% \begin{center}
-% \begin{small}
-% \begin{sc}
-% \begin{tabular}{c|c|cc}
-%   \hline
-% \multicolumn{4}{c}{Per-word perplexity} \\
-% \hline
-% \#Topics & Model & NYT & Wikipedia \\
-% \hline
-% \multirow{3}{*}{50}
-% & LDA & 1641.82 & 1980.65 \\
-% & CTM & 1755.38 & 2517.14 \\
-% & pLSI &  &  \\
-% \hline
-% \multirow{3}{*}{100}
-% & LDA & 1542.21 & 1836.51 \\
-% & CTM & 1652.53 & 2327.30 \\
-% & pLSI &  &  \\
-% \hline
-% \multirow{3}{*}{150}
-% & LDA & 1485.04 & 1755.31 \\
-% & CTM &         & 2227.58 \\
-% & pLSI &   \\
-% \hline
-% \end{tabular}
-% \end{sc}
-% \end{small}
-% \end{center}
-% \end{table}
-
-%% We need to decide if we want to keep these metrics...
-% \paragraph{Word predictions}
-
-% The first metric is predictive perplexity, which is an objective
-% metric used extensively for comparing topic models in the
-% literature.  Perplexity is a measure of the
-% information content of unseen documents that cannot be captured by the
-% model.  Lower perplexity means that the model is better able to
-% explain the language of test documents.
-
-
 The average word likelihood and average rank across all documents in
 our test set are shown in Table~\ref{tab:word-prediction}.  These
 results are consistent with the values reported in the
@@ -198,43 +64,106 @@ literature~\cite{blei-03,blei-06}; in most cases CTM performs best,
 followed by LDA.
 
 \begin{table*}
-  \caption{Two predictive metrics: predictive log likelihood/predictive rank.  Consistent with values reported in the literature, CTM generally performs the best, followed by LDA, then pLSI.  The bold numbers indicate the best performance in each row.}
-\label{tab:word-prediction}
+  \caption{The five words with the highest probability mass in each topic inferred by humans using the task described in \mysec{sec:tasks}.  Each subtable shows the results for a particular experimental setup.   Each row is a topic; the most probable words are ordered from left to right.}
+\label{tab:topic-samples}
 \centering
 \footnotesize
-\begin{tabular}{rlllll}
-  topic & & & & & \\
-  \hline
-  0 & railway & lighthouse & rail & huddersfield & station \\ 
-  1 & school & college & education & history & conference \\ 
-  2 & catholic & church & film & music & actor \\ 
-  3 & runners & team & championships & match & racing \\ 
-  4 & engine & company & power & dwight & engines \\ 
-  5 & university & london & british & college & county \\ 
-  6 & food & novel & book & series & superman \\ 
-  7 & november & february & april & august & december \\ 
-  8 & paint & photographs & american & austin & black \\ 
-  9 & war & history & army & american & battle \\ 
-   \hline
+\hspace*{-.4in}
+\subfigure[\emph{set1}, $K = 10$]{
+\begin{tabular}{lllll}
+  railway & lighthouse & rail & huddersfield & station \\ 
+  school & college & education & history & conference \\ 
+  catholic & church & film & music & actor \\ 
+  runners & team & championships & match & racing \\ 
+  engine & company & power & dwight & engines \\ 
+  university & london & british & college & county \\ 
+  food & novel & book & series & superman \\ 
+  november & february & april & august & december \\ 
+  paint & photographs & american & austin & black \\ 
+   war & history & army & american & battle \\ 
 \end{tabular}
+}%
+\subfigure[\emph{set2}, $K = 10$]{
+  \begin{tabular}{|lllll}
+    president & emperor & politician & election & government \\ 
+    american & players & swedish & team & zealand \\ 
+    war & world & navy & road & torpedo \\ 
+    system & pop & microsoft & music & singer \\ 
+    september & 2007 & october & december & 1999 \\ 
+    television & dog & name & george & film \\ 
+    people & malay & town & tribes & cliff \\ 
+    diet & chest & enzyme & hair & therapy \\ 
+    british & city & london & english & county \\ 
+    school & university & college & church & center \\ 
+  \end{tabular}
+}
+\hspace*{-.5in}
+\subfigure[\emph{set1}, $K = 15$]{
+\begin{tabular}{lllll}
+australia & knee & british & israel & set \\ 
+  catholic & roman & island & village & columbia \\ 
+  john & devon & michael & austin & charles \\ 
+  school & university & class & community & district \\ 
+  november & february & 2007 & 2009 & 2005 \\ 
+  lighthouse & period & architects & construction & design \\ 
+  railway & rail & huddersfield & ownership & services \\ 
+  cyprus & archdiocese & diocese & king & miss \\ 
+  carson & gordon & hugo & ward & whitney \\ 
+  significant & application & campaign & comic & considered \\ 
+  born & london & american & england & black \\ 
+  war & defense & history & military & artillery \\ 
+  actor & film & actress & band & designer \\ 
+  york & michigan & florida & north & photographs \\ 
+  church & catholic & county & 2001 & agricultural \\ 
+\end{tabular}
+}%
+\subfigure[\emph{set2}, $K = 15$]{
+\begin{tabular}{|lllll}
+  music & pop & records & singer & artist \\ 
+  film & paintings & movie & painting & art \\ 
+  school & university & english & students & british \\ 
+  drama & headquarters & chess & poet & stories \\ 
+  family & church & sea & christmas & emperor \\ 
+  dog & broadcast & television & bbc & breed \\ 
+  champagne & regular & character & characteristic & common \\ 
+  election & government & parliament & minister & politician \\ 
+  enzyme & diet & protein & hair & oxygen \\ 
+  war & navy & weapons & aircraft & military \\ 
+  september & october & december & 2008 & 1967 \\ 
+  district & town & marin & america & american \\ 
+  car & power & system & device & devices \\ 
+  hockey & players & football & therapy & champions \\ 
+  california & zealand & georgia & india & kolkata \\ 
+\end{tabular}
+}
 \vspace{0.2in}
 \end{table*}
 
-\subsection{Analyzing human evaluations}
+\begin{figure*}
+\centering
+\subfigure[$K = 10$]{\includegraphics[width = .47\linewidth]{figures/entropy_K10}}%
+\subfigure[$K = 15$]{\includegraphics[width = .47\linewidth]{figures/entropy_K15}}
+
+\caption{A comparison of the entropy of distributions drawn from a
+  Dirichlet versus the entropy of the topic proportions inferred by
+  workers.  Each column of the boxplot shows the distribution of
+  entropies for 100 draws from a Dirichlet distribution with parameter
+  $\alpha$.  The two rightmost columns show the distribution of the
+  entropy of the topic proportions inferred by workers on \emph{set1}
+  and \emph{set2}.  The $\alpha$ workers typically falls between 0.2
+  and 0.5.}
+
+\label{fig:entropy}
+\end{figure*}
+
+\subsection{Comparison with LDA}
 
 The tasks described in \mysec{sec:tasks} were offered on Amazon
-Mechanical Turk (http://www.mturk.com), which allows workers (our pool
-of prospective subjects) to perform small jobs for a fee through a Web
-interface.  No specialized training or knowledge is typically expected
-of the workers.  Amazon Mechanical Turk has been successfully used in
-the past to develop gold-standard data for natural language
-processing~\cite{snow-08} and to label images~\cite{imagenet-cvpr09}.
+Mechanical Turk (http://www.mturk.com), 
 For both the word intrusion and topic intrusion tasks, we presented
 each worker with jobs containing ten of the tasks described in
-\mysec{sec:tasks}.  Each job was performed by 8 separate workers, and
-workers were paid between \$0.07 -- \$0.15 per job.
+\mysec{sec:tasks}.
 
-\paragraph{Word intrusion}
 As described in \mysec{sec:wordintrusion}, the word intrusion task
 measures how well the inferred topics match human concepts (using
 \emph{model precision}, i.e., how well the intruders detected by the
