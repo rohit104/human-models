@@ -65,7 +65,7 @@ LDA can be described by the following generative process:
     \item Draw topic proportions $\theta_d \sim \mathrm{Dir}(\alpha)$
     \item For each word $w_{d, n}$, 
       \begin{enumerate*}
-      \item Draw topic assignment $z_{d,n} \sim \mathrm{Mult}(\theta_d)$
+      \item Draw topic assignment $z_{d,n}\!\!\sim\!\!\mathrm{Mult}(\theta_d)$
       \item Draw word $w_{d,n} \sim \mathrm{Mult}(\beta_{z_{d,n}})$
       \end{enumerate*}
     \end{enumerate*}

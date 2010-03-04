@@ -56,17 +56,17 @@
 \begin{abstract}%
   Probabilistic topic models are a popular tool for the unsupervised
   analysis of text, providing both a predictive model of future text
-  and a latent topic representation of the corpus.  Practitioners
-  typically assume that the latent space is semantically meaningful.
-  It is used to check models, summarize the corpus, and guide
-  exploration of its contents.  However, whether the latent space is
-  interpretable is in need of quantitative evaluation.  In this paper,
-  we present new quantitative methods for measuring semantic meaning
-  in inferred topics.  We back these measures with large-scale user
-  studies, showing that they capture aspects of the model that are
-  undetected by previous measures of model quality based on held-out
-  likelihood.  Surprisingly, topic models which perform better on
-  held-out likelihood may infer less semantically meaningful topics.
+  and a latent topic representation of the corpus.  Recent studies
+  have found that while there are suggestive connections between topic
+  models and the way humans interpret data, these two often disagree.
+  In this paper, we explore this disagreement from the perspective of
+  the learning process rather than the output.  We present a novel
+  task, \emph{tag-and-cluster}, which asks subjects to simultaneously
+  annotate documents and cluster those annotations.  We use these
+  annotations as a novel approach for constructing a topic model,
+  grounded in human interpretations of documents.  We demonstrate that
+  these topic models have features which distinguish them from
+  traditional topic models.
 \end{abstract}
 
 \input{intro}
@@ -74,26 +74,25 @@
 \input{tasks}
 \input{experiments}
 \section{Discussion}
+  We presented the first method for constructing topic models using
+  human judgments.  Our approach relies on a novel task,
+  \emph{tag-and-cluster}, which asks users to simultanesouly annotate
+  a document with one of its words and to cluster those annotations.
+  We demonstrate using experiments on Amazon Mechanical Turk that our
+  method constructs topic models quickly and robustly.  We also show
+  that while our topic models bear many similarities to traditionally
+  constructed topic models, our human-learned topic models have unique
+  features such as fixed sparsity and a tendency to construct topics
+  around concepts which models such as LDA typically fail to find.
 
-We presented the first validation of the assumed coherence and
-relevance of topic models using human experiments.
-For three topic models, we demonstrated that traditional metrics do
-not capture whether topics are coherent or not.  Traditional metrics
-are, indeed, negatively correlated with the measures of topic quality
-developed in this paper.  Our measures enable new forms of model
-selection and suggest that practitioners developing topic models should
-thus focus on evaluations that depend on real-world task performance
-rather than optimizing likelihood-based measures.
-
-In a more qualitative vein, this work validates the use of topics for
-corpus exploration and information retrieval.  Humans appreciate the
-semantic coherence of topics and can associate the same documents with
-a topic that a topic model does.  An intriguing possibility is the
-development of models that explicitly seek to optimize the measures we
-develop here either by incorporating human judgments into the
-model-learning framework or creating a computational proxy that
-simulates human judgments.
-
+  We also underscore that the collapsed Gibbs sampling framework is
+  expressive enough to use as the basis for human-guided topic model
+  inference.  This may motivate, as future work, the construction of
+  different modeling assumptions which lead to sampling equations
+  which more closely match the empirically observed sampling performed
+  by humans.  In effect, our method constructs a series of samples
+  from the posterior, a gold standard which future topic models can
+  aim to emulate.
 \bibliographystyle{naaclhlt2010}
 
 \small

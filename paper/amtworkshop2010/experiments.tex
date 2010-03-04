@@ -146,7 +146,7 @@ australia & knee & british & israel & set \\ \hline
   entropies for 100 draws from a Dirichlet distribution with parameter
   $\alpha$.  The two rightmost columns show the distribution of the
   entropy of the topic proportions inferred by workers on \emph{set1}
-  and \emph{set2}.  The $\alpha$ workers typically falls between 0.2
+  and \emph{set2}.  The $\alpha$ of workers typically falls between 0.2
   and 0.5.}
 
 \label{fig:entropy}
@@ -265,12 +265,13 @@ indicative of the number of clusters, $K$, being too low.
 
 \mytab{tab:lda-topic-samples} shows the topics learned by LDA under
 the same experimental conditions, with the Dirichlet hyperparameter
-$\alpha = 0.2$.  These topics are more difficult to interpret than the
-ones created by humans.  Some topics seem to largely make sense except
-for some anomalous words, such as \{\texttt{district, town, city,
-  local, kolkata}\} or \{\texttt{school, university, college,
-  election, born}\}.  But the small amount of data means that it is
-difficult for a model which does not leverage prior knowledge to infer
+$\alpha = 0.2$ (we justify this choice in the following section).
+These topics are more difficult to interpret than the ones created by
+humans.  Some topics seem to largely make sense except for some
+anomalous words, such as \{\texttt{district, town, city, local,
+  kolkata}\} or \{\texttt{school, university, college, election,
+  born}\}.  But the small amount of data means that it is difficult
+for a model which does not leverage prior knowledge to infer
 meaningful topic.  In contrast, several humans, even working
 independently, can leverage prior knowledge to construct meaningful
 topics with little data.
