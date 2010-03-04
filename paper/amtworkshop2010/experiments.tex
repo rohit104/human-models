@@ -151,7 +151,7 @@ australia & knee & british & israel & set \\
 \begin{table*}[ht]
 \footnotesize
 \centering
-  \caption{The five words with the highest probability mass in each topic inferred by LDA.  Each subtable shows the results for a particular experimental setup.   Each row is a topic; the most probable words are ordered from left to right.}
+  \caption{The five words with the highest probability mass in each topic inferred by LDA, with $\alpha = 0.2$.  Each subtable shows the results for a particular experimental setup.   Each row is a topic; the most probable words are ordered from left to right.}
 \label{tab:lda-topic-samples}
 \hspace*{-.1in}
 \subfigure[\emph{set1}, $K=10$]{
@@ -223,29 +223,78 @@ family & protein & enzyme & acting & oxygen \\
 }
 \end{table*}
 
-As described in \mysec{sec:wordintrusion}, the word intrusion task
-measures how well the inferred topics match human concepts (using
-\emph{model precision}, i.e., how well the intruders detected by the
-subjects correspond to those injected into ones found by the topic
-model).
+\paragraph{Learned topics} As described in \mysec{sec:tasks}, the tag-and-cluster
+task is a way of allowing humans to construct a topic model.  One way
+of visualizing a learned topic model is by examining its topics.
+\mytab{tab:topic-samples} shows the topics constructed by human
+judgments.  Each subtable shows a different experimental setup and
+each row shows an individual topic.  The five most frequently
+occurring words in each topic are shown, ordered from left to right.
 
-\myfig{fig:precision} shows boxplots of the precision for the three
-models on the two corpora.  In most cases LDA performs best. Although
-CTM gives better predictive results on held-out likelihood, it does
-not perform as well on human evaluations. This may be because CTM
-finds correlations between topics and correlations within topics are
-confounding factors; the intruder for one topic might be selected from
-another highly correlated topic.  The performance of pLSI degrades
-with larger numbers of topics, suggesting that
-overfitting~\cite{blei-03} might affect interpretability as well as
-predictive power.
+Many of the topics inferred by humans have straightforward
+interpretations.  For example, the \{\texttt{november, february,
+  april, august, december}\} topic for the \emph{set1} corpus with
+$K=10$ is simply a collection of months.  Similar topics (with years
+and months combined) can be found in the other experimental
+configurations.  Other topics also cover specific semantic domains,
+such as \{\texttt{president, emperor, politican, election,
+  government}\} or \{\texttt{music, pop, records, singer, artist}\}.
+Several of the topics are combinations of distinct concepts, such as
+\{\texttt{catholic, church, film, music, actor}\}, which is often
+indicative of the number of clusters, $K$, being too low.
 
-\myfig{fig:topic_precision} (left) shows examples of topics with high
-and low model precisions from the NY Times data fit with LDA using 50
-topics. In the example with high precision, the topic words all
-coherently express a painting theme.  For the low precision example,
-``taxis'' did not fit in with the other political words in the topic,
-as $87.5\%$ of subjects chose ``taxis'' as the intruder.
+\mytab{tab:lda-topic-samples} shows the topics learned by LDA under
+the same experimental conditions, with the Dirichlet hyperparameter
+$\alpha = 0.2$.  These topics are more difficult to interpret than the
+ones created by humans.  Some topics seem to largely make sense except
+for some anomalous words, such as \{\texttt{district, town, city,
+  local, kolkata}\} or \{\texttt{school, university, college,
+  election, born}\}.  But the small amount of data means that it is
+difficult for a model which does not leverage prior knowledge to infer
+meaningful topic.  In contrast, several humans, even working
+independently, can leverage prior knowledge to construct meaningful
+topics with little data.
 
+There is another qualitative difference between the topics found by
+the tag-and-cluster task and LDA.  Whereas LDA must rely on
+co-occurrence, humans can use ontological information.  Thus, a topic
+which has ontological meaning, such as a list of months, may rarely be
+discovered by LDA since the co-occurrence patterns of months do not
+form a strong pattern.  But users in every experimental configuration
+constructed this topic, suggesting that the users were consistently
+leveraging information that would not be available to LDA, even with a
+larger corpus.
 
+\paragraph{Hyperparameter values} A persistent question among
+practitioners of topic models is how to set or learn the value of the
+hyperparameter $\alpha$.  $\alpha$ is a Dirichlet parameter which acts
+a control on sparsity --- smaller values of $\alpha$ lead to sparser
+document-topic distributions.  By comparing the sparsity patterns of
+human judgments to those of LDA for different settings of $\alpha$, we
+can infer the value of $\alpha$ that would best match human judgments.
 
+\myfig{fig:entropy} shows a boxplot comparison of the entropy of draws
+from a Dirichlet distribution (the generative process in LDA), versus
+the observed entropy of the models learned by humans.  The first six
+columns show the distributions for the Dirichlet draws for various
+values of $\alpha$; the last two columns show the observed entropy
+distributions on the two corpora, \emph{set1} and \emph{set2}.
+
+The empirical entropy distributions across the corpora are comparable
+to those of a Dirichlet distribution with $\alpha$ between
+approximately $0.2$ and $0.5$.  These settings of $\alpha$ are
+slightly higher than, but still in line with a common rule-of-thumb of
+$\alpha = 1 / K$.  \myfig{fig:ll} shows the log-likelihood, a measure
+of model fit, achieved by LDA for each value of $\alpha$.  Higher
+log-likelihoods indicate better fits.  Commensurate with the rule of
+thumb, using log-likelihoods to select $\alpha$ would encourage values
+smaller than human judgments.
+
+However, while the entropy of the Dirichlet draws increases
+significantly when the number of clusters is increased from $K=10$ to
+$K=15$, the entropies assigned by humans does not vary as
+dramatically.  This suggests that for any given document, humans are
+likely to pull words from only a small number of topics, regardless of
+how many topics are available, whereas a model will continue to spread
+probability mass across all topics even as the number of topics
+increases.

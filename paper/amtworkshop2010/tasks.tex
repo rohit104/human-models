@@ -1,24 +1,5 @@
-% jbg: Questions we should answer in this question but which haven't been yet:
-%
-% - Can users choose not to answer a question?  If so, how is it
-% scored?  If not, how are they prevented from skipping? 
-
-% - Are there checks to ensure folks don't click randomly?  (I assume
-% we're only using folks with good feedback, but often there are more
-% checks built in to MT experiments ...  we don't right now (right?),
-% although "reveal answer" might make people thing we do.)  
-
-% - For the "answers don't bias" claim, do we have stronger data to back
-% this up?
-
 \section{Using human judgments to examine the topics}
 \label{sec:tasks}
-% Put little examples of tasks in figures; for word intrusion, put up an
-% example of ``good'' topic and one example of ``bad'' topic to build
-% intuition about why this task is meaningful.
-
-% 1. The main goals of the tasks
-
 Although there appears to be a longstanding assumption that the latent
 space discovered by topic models is meaningful and useful, evaluating
 such assumptions is difficult because discovering topics is an
@@ -37,38 +18,27 @@ topic makes sense.  We call this task \emph{topic intrusion}, as the
 subject must identify a topic that was not associated with the
 document by the model.
 
-% Our experiments are designed for people using Amazon's Mechanical
-% Turk~\footnote{http://www.mturk.com} system, an online clearinghouse
-% for tasks which require human-level intelligence such as developing
-% gold-standard data for natural language processing~\cite{snow-08} or
-% labeling images~\cite{imagenet-cvpr09}.  People use Mechanical Turk to
-% perform short tasks for a small fee; we will use the term ``subjects''
-% to refer to individuals who chose to complete our task.
-
 % 2. Designed two tasks
-\subsection{Word intrusion}
-\label{sec:wordintrusion}
 To measure the coherence of these topics, we develop the \emph{word
-intrusion} task; this task involves evaluating the latent space
+  intrusion} task; this task involves evaluating the latent space
 presented in Figure~\ref{fig:nyttopics:topic}.  In the word intrusion
 task, the subject is presented with six randomly ordered words.  The
 task of the user is to find the word which is out of place or does not
 belong with the others, i.e., the \emph{intruder}.
-Figure~\ref{fig:intruding_word} shows how this task is presented to
+Figure~\ref{fig:screenshot} shows how this task is presented to
 users.
 
 \begin{figure*}[t]
 \centering
-
 \includegraphics[width=0.90\textwidth]{figures/screenshots.png}
-
-\caption{Screenshots of our two human tasks. In the word intrusion
-  task (left), subjects are presented with a set of words and asked to
-  select the word which does not belong with the others.  In the
-  \emph{topic intrusion} task (right), users are given a document's
-  title and the first few sentences of the document.  The users must
-  select which of the four groups of words does not belong.}
-\label{fig:intruding_word}
+\caption{Screenshots of our task.  In the center, the document along
+  with its title is shown.  Words which cannot be selected, e.g.,
+  distractors and words previously selected, are shown in red.  Once a
+  word is selected, the user is asked to find a topic in which to
+  place the word.  The user selects a topic by clicking on an entry in
+  a menu of topics, where each topic is expressed by the five words
+  which occur most frequently in that topic.}
+\label{fig:screenshot}
 \end{figure*}
 
 When the set of words minus the intruder makes sense together, then

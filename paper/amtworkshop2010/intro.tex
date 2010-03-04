@@ -10,41 +10,33 @@ both the topics and an assignment of topics to documents from a
 collection of documents.  (See \myfig{fig:nyttopics:big}.)
 
 These modeling assumptions are useful in the sense that, empirically,
-they lead to good models of documents.  They also anecdotally
-lead to semantically meaningful decompositions of them: topics tend to
-place high probability on words that represent concepts, and documents
-are represented as expressions of those concepts.  Perusing the
-inferred topics is effective for model verification and for ensuring
-that the model is capturing the practitioner's intuitions about the
-documents.  Moreover, producing a human-interpretable decomposition of
-the texts can be a goal in itself, as when browsing or summarizing a
-large collection of
-documents.
-\cite{Chang:2009fk}
+they lead to good models of documents~\cite{wallach-09}.  However,
+recent work has explored how these assumptions correspond to humans'
+understanding of language~\cite{Chang:2009fk,griffiths-06,mei-07}.  Focusing
+on the latent space, i.e., the inferred mappings between topics and
+words and between documents and topics, this work has discovered that
+although there are some suggestive correspondences between human
+semantics and topic models, they are often discordant.
 
-In this spirit, much of the literature comparing different topic
-models presents examples of topics and examples of document-topic
-assignments to help understand a model's mechanics.  Topics also can
-help users discover new content via corpus
-exploration~\cite{mimno-07a}.  The presentation of these topics
-serves, either explicitly or implicitly, as a qualitative evaluation
-of the latent space, but there is no explicit \emph{quantitative}
-evaluation of them.  Instead, researchers employ a variety of metrics
-of model fit, such as perplexity or held-out likelihood.  Such
-measures are useful for evaluating the predictive model, but do not
-address the more explatory goals of topic modeling.
+In this paper we build on this work to further explore how humans
+relate to topic models.  But whereas previous work has focused on
+the results of topic models, here we focus on the process by which
+these models are learned.  Topic models lend themselves to sequential
+procedures through which the latent space is inferred; these
+procedures are in effect programmatic encodings of the modeling
+assumptions.  By substituting key steps in this program with human
+judgments, we obtain insights into the semantic model conceived by
+humans.
 
-In this paper, we present a method for measuring the
-interpretatability of a topic model.  We devise two human evaluation
-tasks to explicitly evaluate both the quality of the topics inferred
-by the model and how well the model assigns topics to documents.  The
-first, \emph{word intrusion}, measures how semantically ``cohesive''
-the topics inferred by a model are and tests whether topics correspond
-to natural groupings for humans.  The second, \emph{topic intrusion},
-measures how well a topic model's decomposition of a document as a
-mixture of topics agrees with human associations of topics with a
-document.  We report the results of a large-scale human study of these
-tasks, varying both modeling assumptions and number of topics.  We
-show that these tasks capture aspects of topic models not measured by
-existing metrics and--surprisingly--models which achieve better
-predictive perplexity often have less interpretable latent spaces.
+Here we present a novel task, \emph{tag-and-cluster}, which asks
+subjects to simultaneously annotate a document and cluster that
+annotation.  This task simulates the sampling step of the collapsed
+Gibbs sampler (described in the next section), except that the
+posterior defined by the model has been replaced by human judgments.
+The task is quick to complete and is robust against noise.  We report
+the results of a large-scale human study of this task, and show that
+the humans are indeed able to learn a ``topic model'' in this fashion,
+and that the learned topic model has semantic properties distinct from
+existing topic models.  We also demonstrate that the judgments can be
+used to guide computer-learned topic models towards models which are
+more concordant with human intuitions.

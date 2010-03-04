@@ -24,17 +24,13 @@
 
 Topic models posit that each document is expressed as a mixture of
 topics.  These topic proportions are drawn once per document, and the
-topics are shared across the corpus.  In this paper we consider Latent
+topics are shared across the corpus.  In this paper we focus on Latent
 Dirichlet allocation (LDA)~\cite{blei-03} a topic model which treats
 each document's topic assignment as a multinomial random variable
-drawn from a symmetric Dirichlet and logistic normal prior,
-respectively.
-
-Inference algorithms for all of these topic models build the same type
-of latent space: a collection of topics for the corpus and a
-collection of topic proportions for each of its documents.  While this
-common latent space has explored for over two decades, its
-interpretability remains unmeasured.
+drawn from a symmetric Dirichlet prior.  LDA, when applied to a
+collection of documents, will build a latent space: a collection of
+topics for the corpus and a collection of topic proportions for each
+of its documents.  
 
 \begin{figure*}[t]
 \centering
@@ -58,16 +54,7 @@ interpretability remains unmeasured.
 \label{fig:nyttopics:big}
 \end{figure*}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.5\linewidth]{figures/lda}
-\caption{A graphical model depiction of latent Dirichlet allocation
-  (LDA).  Plates denote replication.  Shaded circles denote observed
-  variables and unshaded circles denote hidden variables.}
-\label{fig:lda}
-\end{figure}
-
-Formally, the generative process of LDA is as follows:
+LDA can be described by the following generative process:
 \begin{enumerate*}
   \item For each topic $k$, 
     \begin{enumerate*}
@@ -83,11 +70,23 @@ Formally, the generative process of LDA is as follows:
       \end{enumerate*}
     \end{enumerate*}
 \end{enumerate*}
-The parameters of the model are the number of topics, $K$, as well as
-the Dirichlet priors on the topic-word distributions and
-document-topic distributions, $\alpha$ and $\eta$.  The only observed
-variables of the model are the words, $w_{d,n}$.  The remaining
-variables must be inferred.
+This process is depicted graphically in \myfig{fig:lda}.  The
+parameters of the model are the number of topics, $K$, as well as the
+Dirichlet priors on the topic-word distributions and document-topic
+distributions, $\alpha$ and $\eta$.  The only observed variables of
+the model are the words, $w_{d,n}$.  The remaining variables must be
+learned.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\linewidth]{figures/lda}
+\caption{A graphical model depiction of latent Dirichlet allocation
+  (LDA).  Plates denote replication.  Shaded circles denote observed
+  variables and unshaded circles denote hidden variables.}
+\label{fig:lda}
+\end{figure}
+
 
 There are several techniques for performing posterior inference,
 i.e., inferring the distribution over hidden variables given a
@@ -108,7 +107,7 @@ where $n_{d,k}$ denotes the number of words in document $d$ assigned
 to topic $k$ and $n_{w,k}$ the number of times word $w$ is assigned to
 topic $k$.  This leads to the sampling equations,
 \begin{eqnarray}
-  &&p(z_{d,i} = k | \alpha, \eta, \bm{w}, \bm{z}y) \propto \\
+  &&p(z_{d,i} = k | \alpha, \eta, \bm{w}, \bm{z}y) \propto \notag \\
   &&\qquad (n^{\lnot d,i}_{d,k} + \alpha_{k})\frac{\eta_{w_{d,i}} + n^{\lnot d,i}_{w_{d,i}, k}}{\sum_w n^{\lnot d,i}_{w, k} + \eta_w},
   \label{eq:sampling}
 \end{eqnarray}
@@ -124,25 +123,6 @@ clusters, will their own sampling equations follow \myeq{eq:sampling}
 or will they be different, reflecting different underlying assumptions
 about the data.
 
-For models that use held-out likelihood, Wallach et
-al.~\cite{wallach-09} provide a summary of evaluation
-techniques. These metrics borrow tools from the language modeling
-community to measure how well the information learned from a corpus
-applies to unseen documents.  These metrics generalize easily and
-allow for likelihood-based comparisons of different models or
-selection of model parameters such as the number of topics.  However,
-this adaptability comes at a cost: these methods only measure the
-probability of observations; the internal representation of the models
-is ignored.
-
-Griffiths et al.~\cite{griffiths-06} is an important exception to the
-trend of using external tasks or held-out likelihood.  They showed
-that the number of topics a word appears in correlates with how many
-distinct senses it has and reproduced many of the metrics used in the
-psychological community based on human performance.  However, this is
-still not a deep analysis of the structure of the latent space, as it
-does not examine the structure of the topics themselves.
-
 We emphasize that not measuring the internal representation of topic
 models is at odds with their presentation and development.  Most topic
 modeling papers display qualitative assessments of the inferred topics
@@ -150,6 +130,6 @@ or simply assert that topics are semantically meaningful, and
 practitioners use topics for model checking during the development
 process.  This implicit notion that topics have semantic meaning for
 users has even motivated work that attempts to automatically label
-topics~\cite{mei-07}.  Our goal is to measure the success of
+topics~.  Our goal is to measure the success of
 interpreting topic models across number of topics and modeling
 assumptions.
