@@ -24,13 +24,11 @@
 
 Topic models posit that each document is expressed as a mixture of
 topics.  These topic proportions are drawn once per document, and the
-topics are shared across the corpus.  There are many instantiations of
-topic models which make differnet modeling assumptions latent semantic
-analysis (LSA)~\cite{landauer-97}, latent semantic indexing
-(LSI)~\cite{deerwester-90}.  In this paper we consider Latent
-Dirichlet allocation (LDA)~\cite{blei-03} which treats each document's
-topic assignment as a multinomial random variable drawn from a
-symmetric Dirichlet and logistic normal prior, respectively.
+topics are shared across the corpus.  In this paper we consider Latent
+Dirichlet allocation (LDA)~\cite{blei-03} a topic model which treats
+each document's topic assignment as a multinomial random variable
+drawn from a symmetric Dirichlet and logistic normal prior,
+respectively.
 
 Inference algorithms for all of these topic models build the same type
 of latent space: a collection of topics for the corpus and a
@@ -126,16 +124,6 @@ clusters, will their own sampling equations follow \myeq{eq:sampling}
 or will they be different, reflecting different underlying assumptions
 about the data.
 
-
-The reticence to look under the hood of these models has persisted
-even as models have moved from psychology into computer science with
-the development of pLSI and LDA.  Models either use measures based on
-held-out likelihood~\cite{blei-03,blei-06} or an external task that is
-independent of the topic space such as sentiment
-detection~\cite{titov-08} or information retrieval~\cite{wei-06}.
-This is true even for models engineered to have semantically coherent
-topics~\cite{boyd-graber-07}.
-
 For models that use held-out likelihood, Wallach et
 al.~\cite{wallach-09} provide a summary of evaluation
 techniques. These metrics borrow tools from the language modeling
@@ -160,13 +148,8 @@ models is at odds with their presentation and development.  Most topic
 modeling papers display qualitative assessments of the inferred topics
 or simply assert that topics are semantically meaningful, and
 practitioners use topics for model checking during the development
-process.  Hall et al.~\cite{hall-08}, for example, used latent topics
-deemed historically relevant to explore themes in the scientific
-literature.  Even in production environments, topics are presented as
-themes: Rexa (http://rexa.info), a scholarly publication search
-engine, displays the topics associated with documents.  This implicit
-notion that topics have semantic meaning for users has even
-motivated work that attempts to automatically label
+process.  This implicit notion that topics have semantic meaning for
+users has even motivated work that attempts to automatically label
 topics~\cite{mei-07}.  Our goal is to measure the success of
 interpreting topic models across number of topics and modeling
 assumptions.

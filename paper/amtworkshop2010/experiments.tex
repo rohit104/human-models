@@ -30,7 +30,6 @@ leading to a total of four experiments --- two for each set of
 documents and two for each value of $K$.
 
 \subsection{Tagging behavior}
-\label{sec:evalmetrics}
 
 There are several metrics commonly used to evaluate topic models in
 the literature~\cite{wallach-09}.  Many of these metrics are
@@ -40,28 +39,6 @@ its parameters from a \emph{training set}.  In this work, we set aside
 20\% of the documents in each corpus as a test set and train on the
 remaining 80\% of documents.  We then compute predictive rank and
 predictive log likelihood.
-
-To ensure consistency of evaluation across different models, we follow
-Teh et al.'s~\cite{TehKurWel2008} approximation of the predictive
-likelihood $p(\textbf{w}_d|D_{\textrm{train}})$ using $p({\bm
-  w}_d|D_{\textrm{train}}) \approx p({\bm w}_d|\hat{\theta}_d)$, where
-$\hat{\theta}_d$ is a point estimate of the posterior topic
-proportions for document $d$. For pLSI $\hat{\theta}_d$ is the MAP
-estimate; for LDA and CTM $\hat{\theta}_d$ is the mean of the
-variational posterior.
-With this information, we can ask what words the model believes will
-be in the document and compare it with the document's actual
-composition.  Given document $\bm w_d$, we first estimate
-$\hat{\theta}_d$ and then for every word in the vocabulary, we compute
-$p(w|\hat{\theta}_d) = \sum_z p(w|z)p(z|\hat{\theta}_d)$.  Then we
-compute the average rank for the terms that actually appeared in document
-$\bm w_d$ (we follow the convention that lower rank is better).
-
-The average word likelihood and average rank across all documents in
-our test set are shown in Table~\ref{tab:word-prediction}.  These
-results are consistent with the values reported in the
-literature~\cite{blei-03,blei-06}; in most cases CTM performs best,
-followed by LDA.
 
 \begin{table*}
   \caption{The five words with the highest probability mass in each topic inferred by humans using the task described in \mysec{sec:tasks}.  Each subtable shows the results for a particular experimental setup.   Each row is a topic; the most probable words are ordered from left to right.}
@@ -246,29 +223,11 @@ family & protein & enzyme & acting & oxygen \\
 }
 \end{table*}
 
-
-
-The tasks described in \mysec{sec:tasks} were offered on Amazon
-Mechanical Turk (http://www.mturk.com), 
-For both the word intrusion and topic intrusion tasks, we presented
-each worker with jobs containing ten of the tasks described in
-\mysec{sec:tasks}.
-
 As described in \mysec{sec:wordintrusion}, the word intrusion task
 measures how well the inferred topics match human concepts (using
 \emph{model precision}, i.e., how well the intruders detected by the
-subjects correspond to those injected into ones found by the topic model).  
-
-Let $\omega^{m}_{k}$ be the index of the intruding word among the words generated
-from the $k^{th}$ topic inferred by model $m$.  Further let $i^m_{k, s}$ be
-the intruder selected by subject $s$ on the set of words generated from the
-$k$th topic inferred by model $m$ and let $S$ denote the number of subjects.  We
-define model precision by the fraction of subjects agreeing with the model,
-\begin{equation}
-  \mathrm{MP}^m_k = \textstyle \sum_{s} \mathds{1}(i^m_{k,s} = \omega^{m}_{k}) / S.
-  \label{eq:mp}
-\end{equation}
-
+subjects correspond to those injected into ones found by the topic
+model).
 
 \myfig{fig:precision} shows boxplots of the precision for the three
 models on the two corpora.  In most cases LDA performs best. Although
@@ -285,19 +244,8 @@ predictive power.
 and low model precisions from the NY Times data fit with LDA using 50
 topics. In the example with high precision, the topic words all
 coherently express a painting theme.  For the low precision example,
- ``taxis'' did not fit in with the other
-political words in the topic, as $87.5\%$ of subjects chose ``taxis''
-as the intruder.
+``taxis'' did not fit in with the other political words in the topic,
+as $87.5\%$ of subjects chose ``taxis'' as the intruder.
 
-
-The relationship between model precision, $\mathrm{MP}^m_k$, and the
-model's estimate of the likelihood of the intruding word in
-\myfig{fig:prec_vs_lhood} (top row) is surprising.  The highest
-probability did not have the best interpretability; in fact, the trend
-was the opposite.  This suggests that as topics become more
-fine-grained in models with larger number of topics, they are less
-useful for humans.  The downward sloping trend lines in
-\myfig{fig:prec_vs_lhood} implying that the models are often trading
-improved likelihood for lower interpretability.
 
 

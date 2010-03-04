@@ -1,37 +1,7 @@
-%
-% topic models are widely used
-%  - text words
-% what topic models do
-%  - take a corpus
-%  - find patterns /dist on words
-%  - associate docs /w themes
-%  - docs exhibit multiple patterns
-%
-% these modeling assumptions are useful.
-%  - anecdotal result
-%  - no debugging
-%  - model verification
-%
-% different assumptions lead to different models
-% these models are compared across models/# topics using perplexity etc.
-% decomposition is of intrinsic interest~\cite{..,..,..}
-% cite hall, griffiths <- bayes factors, mimno
-%
-% different way of doing model selection
-%
-
 \section{Introduction}
-
-% !!! put this in somewhere
-
-% This versatile class of models has also been adapted to areas as
-% diverse as population genetics~\cite{populationstructure}, computer
-% vision~\cite{feifei:hdp}, link structure~\cite{Chang:2009uu,
-%   McCallum:2005bq}, and temporal data~\cite{Gruber:2007jx}.
-
-
 Probabilistic topic models have become popular tools for the
-unsupervised analysis of large document collections~\cite{blei-09}.
+unsupervised analysis of large document
+collections~\cite{deerwester-90,griffiths02probabilistic,blei-09}.
 These models posit a set of latent \emph{topics}, multinomial
 distributions over words, and assume that each document can be
 described as a mixture of these topics.  With algorithms for fast
@@ -50,9 +20,7 @@ documents.  Moreover, producing a human-interpretable decomposition of
 the texts can be a goal in itself, as when browsing or summarizing a
 large collection of
 documents.
-
-% dmb: cite mimnos digital libraries publication here.  possibly cite
-% the stuff that comes later on when you talk about rexa, etc.
+\cite{Chang:2009fk}
 
 In this spirit, much of the literature comparing different topic
 models presents examples of topics and examples of document-topic
