@@ -9,7 +9,7 @@ of the workers.  Amazon Mechanical Turk has been successfully used in
 the past to develop gold-standard data for natural language
 processing~\cite{snow-08} and to label images~\cite{imagenet-cvpr09}.
 
-we prepare two randomly-chosen, 100-document subsets of English
+We prepare two randomly-chosen, 100-document subsets of English
 Wikipedia~\footnote{http://en.wikipedia.org}.  For convenience, we
 denote these two sets of documents as \emph{set1} and \emph{set2}.
 For each document, we keep only the first 150 words for our
@@ -30,15 +30,34 @@ leading to a total of four experiments --- two for each set of
 documents and two for each value of $K$.
 
 \subsection{Tagging behavior}
+For each experiment we issued 100 HITs, leading to a total of 2000
+tags per experiment.  \myfig{fig:hists} shows the number of HITs
+performed per person in each experiment.  Between 12 and 30 distinct
+workers participated in each experiment.  The number of HITs performed
+per person is heavily skewed, with the most active participants
+completing an order of magnitude more HITs than other particpants.
 
-There are several metrics commonly used to evaluate topic models in
-the literature~\cite{wallach-09}.  Many of these metrics are
-\emph{predictive} metrics; that is, they capture the model's ability
-to predict a \emph{test set} of unseen documents after having learned
-its parameters from a \emph{training set}.  In this work, we set aside
-20\% of the documents in each corpus as a test set and train on the
-remaining 80\% of documents.  We then compute predictive rank and
-predictive log likelihood.
+\begin{figure*}
+\centering
+\subfigure[\emph{set1}, $K = 10$]{\includegraphics[width = .24\linewidth]{figures/histogram_1}}%
+\subfigure[\emph{set1}, $K = 15$]{\includegraphics[width = .24\linewidth]{figures/histogram_2}}%
+\subfigure[\emph{set2}, $K = 10$]{\includegraphics[width = .24\linewidth]{figures/histogram_4}}%
+\subfigure[\emph{set2}, $K = 15$]{\includegraphics[width = .24\linewidth]{figures/histogram_3}}%
+\caption{The number of HITs performed by participant. Between 12 and 30 people participated in each experiment.}
+\label{fig:hists}
+\end{figure*}
+
+\begin{figure}
+\centering
+\includegraphics[width = .9\linewidth]{figures/hit_times}
+\caption{The distribution of times taken per HIT.  Each series represents a different experiment.  The bulk of the tags took less than one minute and more than a few seconds.}
+\label{fig:times}
+\end{figure}
+
+\myfig{fig:times} shows the amount of time taken per tag, in log
+seconds. Each color represents a different experiment.  The bulk of
+the tags took less than a minute to perform and more than a few
+seconds.
 
 \begin{table*}
   \caption{The five words with the highest probability mass in each topic inferred by humans using the task described in \mysec{sec:tasks}.  Each subtable shows the results for a particular experimental setup.   Each row is a topic; the most probable words are ordered from left to right.}
@@ -48,69 +67,69 @@ predictive log likelihood.
 \hspace*{-.4in}
 \subfigure[\emph{set1}, $K = 10$]{
 \begin{tabular}{lllll}
-  railway & lighthouse & rail & huddersfield & station \\ 
-  school & college & education & history & conference \\ 
-  catholic & church & film & music & actor \\ 
-  runners & team & championships & match & racing \\ 
-  engine & company & power & dwight & engines \\ 
-  university & london & british & college & county \\ 
-  food & novel & book & series & superman \\ 
-  november & february & april & august & december \\ 
-  paint & photographs & american & austin & black \\ 
+  railway & lighthouse & rail & huddersfield & station \\ \hline 
+  school & college & education & history & conference \\ \hline 
+  catholic & church & film & music & actor \\ \hline 
+  runners & team & championships & match & racing \\ \hline 
+  engine & company & power & dwight & engines \\ \hline 
+  university & london & british & college & county \\ \hline 
+  food & novel & book & series & superman \\ \hline 
+  november & february & april & august & december \\ \hline 
+  paint & photographs & american & austin & black \\ \hline 
    war & history & army & american & battle \\ 
 \end{tabular}
 }%
 \subfigure[\emph{set2}, $K = 10$]{
   \begin{tabular}{|lllll}
-    president & emperor & politician & election & government \\ 
-    american & players & swedish & team & zealand \\ 
-    war & world & navy & road & torpedo \\ 
-    system & pop & microsoft & music & singer \\ 
-    september & 2007 & october & december & 1999 \\ 
-    television & dog & name & george & film \\ 
-    people & malay & town & tribes & cliff \\ 
-    diet & chest & enzyme & hair & therapy \\ 
-    british & city & london & english & county \\ 
-    school & university & college & church & center \\ 
+    president & emperor & politician & election & government \\ \hline 
+    american & players & swedish & team & zealand \\ \hline 
+    war & world & navy & road & torpedo \\ \hline 
+    system & pop & microsoft & music & singer \\ \hline 
+    september & 2007 & october & december & 1999 \\ \hline 
+    television & dog & name & george & film \\ \hline 
+    people & malay & town & tribes & cliff \\ \hline 
+    diet & chest & enzyme & hair & therapy \\ \hline 
+    british & city & london & english & county \\ \hline 
+    school & university & college & church & center \\
   \end{tabular}
 }
 \hspace*{-.5in}
 \subfigure[\emph{set1}, $K = 15$]{
 \begin{tabular}{lllll}
-australia & knee & british & israel & set \\ 
-  catholic & roman & island & village & columbia \\ 
-  john & devon & michael & austin & charles \\ 
-  school & university & class & community & district \\ 
-  november & february & 2007 & 2009 & 2005 \\ 
-  lighthouse & period & architects & construction & design \\ 
-  railway & rail & huddersfield & ownership & services \\ 
-  cyprus & archdiocese & diocese & king & miss \\ 
-  carson & gordon & hugo & ward & whitney \\ 
-  significant & application & campaign & comic & considered \\ 
-  born & london & american & england & black \\ 
-  war & defense & history & military & artillery \\ 
-  actor & film & actress & band & designer \\ 
-  york & michigan & florida & north & photographs \\ 
+australia & knee & british & israel & set \\ \hline 
+  catholic & roman & island & village & columbia \\ \hline 
+  john & devon & michael & austin & charles \\ \hline 
+  school & university & class & community & district \\ \hline 
+  november & february & 2007 & 2009 & 2005 \\ \hline 
+  lighthouse & period & architects & construction & design \\ \hline 
+  railway & rail & huddersfield & ownership & services \\ \hline 
+  cyprus & archdiocese & diocese & king & miss \\ \hline 
+  carson & gordon & hugo & ward & whitney \\ \hline 
+  significant & application & campaign & comic & considered \\ \hline 
+  born & london & american & england & black \\ \hline 
+  war & defense & history & military & artillery \\ \hline 
+  actor & film & actress & band & designer \\ \hline 
+  york & michigan & florida & north & photographs \\ \hline 
   church & catholic & county & 2001 & agricultural \\ 
 \end{tabular}
 }%
 \subfigure[\emph{set2}, $K = 15$]{
 \begin{tabular}{|lllll}
-  music & pop & records & singer & artist \\ 
-  film & paintings & movie & painting & art \\ 
-  school & university & english & students & british \\ 
-  drama & headquarters & chess & poet & stories \\ 
-  family & church & sea & christmas & emperor \\ 
-  dog & broadcast & television & bbc & breed \\ 
-  champagne & regular & character & characteristic & common \\ 
-  election & government & parliament & minister & politician \\ 
-  enzyme & diet & protein & hair & oxygen \\ 
-  war & navy & weapons & aircraft & military \\ 
-  september & october & december & 2008 & 1967 \\ 
-  district & town & marin & america & american \\ 
-  car & power & system & device & devices \\ 
-  hockey & players & football & therapy & champions \\ 
-  california & zealand & georgia & india & kolkata \\ 
+  music & pop & records & singer & artist \\ \hline 
+  film & paintings & movie & painting & art \\ \hline 
+  school & university & english & students & british \\ \hline 
+  drama & headquarters & chess & poet & stories \\ \hline 
+  family & church & sea & christmas & emperor \\ \hline 
+  dog & broadcast & television & bbc & breed \\ \hline 
+  champagne & regular & character & characteristic & common \\ \hline 
+  election & government & parliament & minister & politician \\ \hline 
+  enzyme & diet & protein & hair & oxygen \\ \hline 
+  war & navy & weapons & aircraft & military \\ \hline 
+  september & october & december & 2008 & 1967 \\ \hline 
+  district & town & marin & america & american \\ \hline 
+  car & power & system & device & devices \\ \hline 
+  hockey & players & football & therapy & champions \\ \hline 
+  california & zealand & georgia & india & kolkata \\
 \end{tabular}
 }
 \vspace{0.2in}
@@ -118,8 +137,8 @@ australia & knee & british & israel & set \\
 
 \begin{figure*}
 \centering
-\subfigure[$K = 10$]{\includegraphics[width = .47\linewidth]{figures/entropy_K10}}%
-\subfigure[$K = 15$]{\includegraphics[width = .47\linewidth]{figures/entropy_K15}}
+\subfigure[$K = 10$]{\includegraphics[width = .42\linewidth]{figures/entropy_K10}}%
+\subfigure[$K = 15$]{\includegraphics[width = .42\linewidth]{figures/entropy_K15}}
 
 \caption{A comparison of the entropy of distributions drawn from a
   Dirichlet versus the entropy of the topic proportions inferred by
@@ -136,15 +155,16 @@ australia & knee & british & israel & set \\
 \subsection{Comparison with LDA}
 \begin{figure*}
 \centering
-\subfigure[\emph{full}, $K = 10$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_full_10}}%
-\subfigure[\emph{set1}, $K = 10$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_set1_10}}%
-\subfigure[\emph{set2}, $K = 10$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_set2_10}}
+%\subfigure[\emph{full}, $K = 10$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_full_10}}%
+\subfigure[\emph{set1}, $K = 10$]{\includegraphics[width = .24\linewidth]{figures/lda_ll_set1_10}}%
+\subfigure[\emph{set2}, $K = 10$]{\includegraphics[width = .24\linewidth]{figures/lda_ll_set2_10}}%
+%\subfigure[\emph{full}, $K = 15$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_full_10}}%
+\subfigure[\emph{set1}, $K = 15$]{\includegraphics[width = .24\linewidth]{figures/lda_ll_set1_10}}%
+\subfigure[\emph{set2}, $K = 15$]{\includegraphics[width = .24\linewidth]{figures/lda_ll_set2_10}}
 
-\subfigure[\emph{full}, $K = 15$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_full_10}}%
-\subfigure[\emph{set1}, $K = 15$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_set1_10}}%
-\subfigure[\emph{set2}, $K = 15$]{\includegraphics[width = .32\linewidth]{figures/lda_ll_set2_10}}
-
-\caption{The log-likelihood achieved by LDA as a function of iteration.  \emph{full} refers to a larger set of 7726 Wikipedia articles.   There is one series for each value of $\alpha \in \{0.05, 0.1, 0.2, 0.5, 1.0, 2.0\}$ from top to bottom.}
+\caption{The log-likelihood achieved by LDA as a function of iteration.  
+%\emph{full} refers to a larger set of 7726 Wikipedia articles.   
+There is one series for each value of $\alpha \in \{0.05, 0.1, 0.2, 0.5, 1.0, 2.0\}$ from top to bottom.}
 \label{fig:ll}
 \end{figure*}
 
@@ -156,68 +176,68 @@ australia & knee & british & israel & set \\
 \hspace*{-.1in}
 \subfigure[\emph{set1}, $K=10$]{
 \begin{tabular}{lllll}
-born & 2004 & team & award & sydney \\ 
-  regiment & army & artillery & served & scouting \\ 
-  line & station & main & island & railway \\ 
-  region & street & located & site & knee \\ 
-  food & february & conference & day & 2009 \\ 
-  pride & greek & knowledge & portland & study \\ 
-  catholic & church & roman & black & time \\ 
-  class & series & film & actor & engine \\ 
-  travel & human & office & management & defense \\ 
+born & 2004 & team & award & sydney \\ \hline 
+  regiment & army & artillery & served & scouting \\ \hline 
+  line & station & main & island & railway \\ \hline 
+  region & street & located & site & knee \\ \hline 
+  food & february & conference & day & 2009 \\ \hline 
+  pride & greek & knowledge & portland & study \\ \hline 
+  catholic & church & roman & black & time \\ \hline 
+  class & series & film & actor & engine \\ \hline 
+  travel & human & office & management & defense \\ \hline 
   school & born & war & world & university \\ 
 \end{tabular}
 }%
 \subfigure[\emph{set2}, $K=10$]{
 \begin{tabular}{|lllll}
-september & english & edit & nord & hockey \\ 
-  black & hole & current & england & model \\ 
-  training & program & war & election & navy \\ 
-  school & university & district & city & college \\ 
-  family & word & international & road & japan \\ 
-  publication & time & day & india & bridge \\ 
-  born & pop & world & released & march \\ 
-  won & video & microsoft & project & hungary \\ 
-  film & hair & bank & national & town \\ 
+september & english & edit & nord & hockey \\ \hline 
+  black & hole & current & england & model \\ \hline 
+  training & program & war & election & navy \\ \hline 
+  school & university & district & city & college \\ \hline 
+  family & word & international & road & japan \\ \hline 
+  publication & time & day & india & bridge \\ \hline 
+  born & pop & world & released & march \\ \hline 
+  won & video & microsoft & project & hungary \\ \hline 
+  film & hair & bank & national & town \\ \hline 
   people & name & french & therapy & artist \\ 
 \end{tabular}
 }
 \hspace*{-.3in}
 \subfigure[\emph{set1}, $K=15$]{
 \begin{tabular}{lllll}
-time & michael & written & experience & match \\ 
-  line & station & railway & branch & knowledge \\ 
-  film & land & pass & set & battle \\ 
-  william & florida & carson & virginia & newfoundland \\ 
-  war & regiment & british & army & south \\ 
-  reaction & terminal & copper & running & complex \\ 
-  born & school & world & college & black \\ 
-  food & conference & flight & medium & rail \\ 
-  township & scouting & census & square & county \\ 
-  travel & defense & training & management & edges \\ 
-  series & actor & engine & november & award \\ 
-  pride & portland & band & northwest & god \\ 
-  team & knee & 2004 & sydney & israel \\ 
-  catholic & located & site & region & church \\ 
+time & michael & written & experience & match \\ \hline 
+  line & station & railway & branch & knowledge \\ \hline 
+  film & land & pass & set & battle \\ \hline 
+  william & florida & carson & virginia & newfoundland \\ \hline 
+  war & regiment & british & army & south \\ \hline 
+  reaction & terminal & copper & running & complex \\ \hline 
+  born & school & world & college & black \\ \hline 
+  food & conference & flight & medium & rail \\ \hline 
+  township & scouting & census & square & county \\ \hline 
+  travel & defense & training & management & edges \\ \hline 
+  series & actor & engine & november & award \\ \hline 
+  pride & portland & band & northwest & god \\ \hline 
+  team & knee & 2004 & sydney & israel \\ \hline 
+  catholic & located & site & region & church \\ \hline 
   class & february & time & public & king \\ 
 \end{tabular}
 }%
 \subfigure[\emph{set2}, $K=15$]{
 \begin{tabular}{|lllll}
-family & protein & enzyme & acting & oxygen \\ 
-  england & producer & popular & canadian & sea \\ 
-  system & death & artist & running & car \\ 
-  character & series & dark & main & village \\ 
-  english & word & publication & stream & day \\ 
-  training & program & hair & students & electrical \\ 
-  district & town & city & local & kolkata \\ 
-  september & edit & music & records & recorded \\ 
-  black & pop & bank & usually & hole \\ 
-  people & choir & road & diet & related \\ 
-  war & built & navy & british & service \\ 
-  center & million & cut & champagne & players \\ 
-  born & television & current & drama & won \\ 
-  school & university & college & election & born \\ 
+family & protein & enzyme & acting & oxygen \\ \hline 
+  england & producer & popular & canadian & sea \\ \hline 
+  system & death & artist & running & car \\ \hline 
+  character & series & dark & main & village \\ \hline 
+  english & word & publication & stream & day \\ \hline 
+  training & program & hair & students & electrical \\ \hline 
+  district & town & city & local & kolkata \\ \hline 
+  september & edit & music & records & recorded \\ \hline 
+  black & pop & bank & usually & hole \\ \hline 
+  people & choir & road & diet & related \\ \hline 
+  war & built & navy & british & service \\ \hline 
+  center & million & cut & champagne & players \\ \hline 
+  born & television & current & drama & won \\ \hline 
+  school & university & college & election & born \\ \hline 
   film & nord & played & league & hockey \\ 
 \end{tabular}
 }
