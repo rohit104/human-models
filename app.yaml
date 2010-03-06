@@ -11,6 +11,12 @@ handlers:
 - url: /stylesheets
   static_dir: stylesheets
 
+- url: /tokens\.html
+  script: tokens.py
+
+- url: /token_rpc
+  script: tokens.py
+
 - url: /.*
   script: index.py
 

@@ -17,7 +17,13 @@ class VerificationLoader(bulkloader.Loader):
                                    [('user_id', int),
                                     ('verification_code', int)])
 
-loaders = [DocumentLoader, VerificationLoader]
+class TokenLoader(bulkloader.Loader):
+    def __init__(self):
+        bulkloader.Loader.__init__(self, 'Token',
+                                   [('token', lambda x: unicode(x, "utf-8")),
+                                    ('count', int)])
+
+loaders = [DocumentLoader, VerificationLoader, TokenLoader]
 
 class TagExporter(bulkloader.Exporter):
     def __init__(self):

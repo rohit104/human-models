@@ -10,16 +10,33 @@ a.instruction_toggle {
     text-decoration : none;
 }
 
+
+a.tag:hover {
+    background-color : black;
+}
+
 a.chosen {
     background-color : red;
 }
 
-a.tag:hover {
+a.chosen:hover  {
+    background-color : red;
+}
+
+a.chosen2 {
     background-color : blue;
 }
 
-a.chosen:hover  {
-    background-color : red;
+a.chosen2:hover  {
+    background-color : blue;
+}
+
+a.chosen3 {
+    background-color : purple;
+}
+
+a.chosen3:hover  {
+    background-color : purple;
 }
 
 h1.error {
@@ -47,10 +64,44 @@ div.instructions {
     border-style : dashed;
     background-color : lightblue;
     border-color : darkcyan;
-    display : none;
+    display : block;
 }
 
+a.done {
+    display:inline-block;
+    float:right;
+    background:lightcyan;
+    border:solid;
+    text-decoration:none;
+    border-color:black;
+    border-style:double;
+    color:black;
+}
+
+a.done:hover {
+    text-decoration:underline;
+}
+
+div.token { 
+    background-color : grey;
+    text-align:center;
+    color : white;
+    border : solid;
+    border-color : black;
+    width:80%;
+}
+
+
 div.snippet { 
+    background-color : grey;
+    text-align:center;
+    color : white;
+    border : solid;
+    border-color : black;
+}
+
+span.snippet_example { 
+    display: inline-block;
     background-color : grey;
     color : white;
     border : solid;

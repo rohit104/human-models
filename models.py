@@ -29,3 +29,7 @@ class DocumentStats(db.Model):
     topic = db.IntegerProperty()
     count = db.IntegerProperty()
 
+class Token(db.Model):
+    token = db.StringProperty()
+    count = db.IntegerProperty()
+    date = db.DateTimeProperty(auto_now_add=True)

@@ -1,0 +1,99 @@
+<html>
+  <title>Identifying Books</title>
+  <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
+  <script>
+    function chooseWord(word) {
+      var elem = document.getElementById("word_" + word);
+      if (elem.className == "tag") {
+        elem.className = "tag chosen";
+      } else if (elem.className == "tag chosen") {
+        elem.className = "tag chosen2";
+      } else if (elem.className == "tag chosen2") {
+        elem.className = "tag chosen3";
+      } else if (elem.className == "tag chosen3") {
+        elem.className = "tag";
+      }
+    }
+
+    function toggleInstructions() {
+        var instr_elem = document.getElementById("instructions");
+        var instr_toggle_elem = document.getElementById("instruction_toggle"); 
+        if (instr_elem.style.display == "") {
+           instr_elem.style.display = "none";
+           instr_toggle_elem.innerHTML = "Show HIT instructions";
+        } else {
+           instr_elem.style.display = "";
+           instr_toggle_elem.innerHTML = "Hide HIT instructions";
+        }
+    }
+
+    function get_tag() {
+        var req = new XMLHttpRequest();
+        req.open('GET', '/token_rpc?user_id={{user_id}}', true);
+        req.onreadystatechange = function() { 
+          if (req.readyState == 4 && req.status == 200) {
+             document.getElementById("token").innerHTML = req.responseText;
+          }
+        }
+        req.send(null);
+    }
+
+    function submit() {
+        document.getElementById("token").innerHTML = "...Loading...";    
+        get_tag();
+    }
+  </script>
+  <body onload="get_tag();">
+    <div class="progress">{{num_finished}} / 20</div>
+
+    <a class="instruction_toggle" 
+       href="javascript:toggleInstructions();" id="instruction_toggle">
+      Hide HIT instructions</a>
+    <div class="instructions" id="instructions">
+      In this task you are being asked to identify books, authors, and
+      literary genres in short snippets of text.
+      <ul>
+	<li> You will be shown 20 short snippets of text.
+	<li> Your task is to identify all the books, authors, and literary
+	genres that appear in the text.  E.g.,
+	  <ul>
+	    <li><span class="snippet_example">i like <a href="#" class="chosen tag">war</a>
+ <a href="#" class="chosen tag">and</a> <a href="#" class="chosen tag">peace</a></span>
+	    <li><span class="snippet_example">books by <a href="#" class="chosen tag">tolstoy</a></span>
+	    <li><span class="snippet_example"><a href="#" class="chosen tag">romance</a> novels</span>
+	  </ul>
+	<li> To mark a word as being a part of an entity, click on it so that it changes color.  <b>Make sure that all the words comprising a single entity have the same color.</b>
+	<li> A single snippet of text may contain multiple distinct entities.  E.g.,
+	  <ul>
+	    <li><span class="snippet_example">i like <a href="#" class="chosen tag">war</a> <a href="#" class="chosen tag">and</a> <a href="#" class="chosen tag">peace</a> by <a href="#" class="chosen2 tag">tolstoy</a></span>
+	  </ul>
+
+	<li> <b>Make sure that different entities are colored
+	differently.</b>  Repeatedly clicking a word will cause it to
+	cycle through the three available colors for entities --- red,
+	blue, and purple --- and grey indicating that the word is not associated with an entity.
+	<li> A snippet of text may also contain no entities.  E.g.,
+	  <ul>
+	    <li><span class="snippet_example">i don't like any books</span>
+	  </ul>
+	<li> You should tag entities even if they are slightly misspelled.
+	<li> Once you have finished tagging all the literary entities
+	in the snippet, click the button labeled <b>Done tagging</b>.
+      </ul>
+    </div>
+       
+    <h3>Please identify the books, authors, and literary genres in this snippet.</h3>
+    <a href="javascript:submit()" class="done">
+      Done tagging
+    </a>
+    <div class="token" id="token">
+      ...Loading...
+    </div>
+    <form action="/submit" method="post" id="form">
+      <input type="hidden" name="user_id" value="{{user_id}}">
+      <input type="hidden" name="word" id="form_word">
+      <input type="hidden" name="topic" id="form_topic">
+      <input type="hidden" name="word_string" id="form_word_string">
+    </form>
+  </body>
+</html>
