@@ -35,4 +35,14 @@ class TagExporter(bulkloader.Exporter):
                                       ('word_string', str, None),
                                       ('date', str, None)])
 
-exporters = [TagExporter]
+
+class SubtokenizationExporter(bulkloader.Exporter):
+    def __init__(self):
+        bulkloader.Exporter.__init__(self, 'Subtokenization',
+                                     [('token', str, None),
+                                      ('index', str, None),
+                                      ('tag', str, None),
+                                      ('user_id', str, None),
+                                      ('date', str, None)])
+
+exporters = [TagExporter, SubtokenizationExporter]

@@ -33,3 +33,10 @@ class Token(db.Model):
     token = db.StringProperty()
     count = db.IntegerProperty()
     date = db.DateTimeProperty(auto_now_add=True)
+
+class Subtokenization(db.Model):
+    token = db.StringProperty()
+    index = db.IntegerProperty()
+    tag = db.IntegerProperty()
+    user_id = db.IntegerProperty()
+    date = db.DateTimeProperty(auto_now_add=True)

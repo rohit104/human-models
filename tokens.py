@@ -20,20 +20,48 @@ class TokenFetcher(webapp.RequestHandler):
             return
 
         ids = db.GqlQuery("select __key__ from Token")
-        ids = ids.fetch(100)
+        ids = ids.fetch(1000)
         chosen_id = random.choice(ids)
         tokens = models.Token.get(chosen_id).token
+
+        ids = db.GqlQuery("select __key__ from Subtokenization where user_id = %d and index = 0" % int(user_id))
+        ids = ids.fetch(20)
+        num_finished = len(ids)
+
+        if num_finished >= 20:
+            key = db.GqlQuery("select * from Verification where user_id = %d" % int(user_id))
+            if key.get() is None:
+                key = int(user_id) * 31 - 17
+            else:
+                key = key.get().verification_code
+            self.response.out.write("/token_finish?user_id=%s&key=%d" % (user_id, key))
+            return
 
         num_words = 0
         new_token = ""
         for mm in re.finditer(r'(\w+|\W+)', tokens):
             if re.match(r'\w+', mm.group(0)):
-                new_token += '<a href="javascript:chooseWord(%d);" class="tag" id="word_%d">%s</a>' % (num_words, num_words, mm.group(0))
+                new_token += '<a href="javascript:paintWord(%d);" class="tag" id="word_%d">%s</a>' % (num_words, num_words, mm.group(0))
                 num_words += 1
             else:
                 new_token += mm.group(0)
+        new_token += '<input type="hidden" id="num_words" value="%d">' % num_words
+        new_token += '<input type="hidden" id="tokens" value="%s">' % tokens
+        new_token += '<input type="hidden" id="num_finished" value="%d">' % (num_finished + 1)
 
         self.response.out.write(new_token)
+
+class Finisher(webapp.RequestHandler):
+    def get(self):
+        user_id = self.request.get("user_id")
+        if not user_id:
+            path = os.path.join(os.path.dirname(__file__), 'invalid_userid.html')
+            self.response.out.write(template.render(path, {}))
+            return
+
+        key = self.request.get("key")
+        path = os.path.join(os.path.dirname(__file__), 'finished.html')
+        self.response.out.write(template.render(path, {'user_id' : user_id, 'key' : key }))
 
 class MainPage(webapp.RequestHandler):
     def get(self):
@@ -43,10 +71,7 @@ class MainPage(webapp.RequestHandler):
             self.response.out.write(template.render(path, {}))
             return
 
-        num_finished = 0
-
         template_values = {
-            'num_finished' : num_finished + 1,
             'user_id' : user_id
         }
 
@@ -54,44 +79,28 @@ class MainPage(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 class RecordResult(webapp.RequestHandler):
-    def post(self):
-        document_id = int(self.request.get("document_id"))
-        topic = int(self.request.get("topic"))
-        word_string = self.request.get("word_string").lower()
-
-        tag = models.Tag()
-        tag.topic = topic
-        tag.word = int(self.request.get("word"))
-        tag.user_id = int(self.request.get("user_id"))
-        tag.document_id = document_id
-        tag.word_string = word_string
-        tag.put()
+    def get(self):
+        user_id = int(self.request.get("user_id"))
+        tags = self.request.get("tags")
+        tokens = self.request.get("tokens")
         
-        document_stat = models.DocumentStats.gql("WHERE document_id = %d and topic = %d" % 
-                                                 (document_id, topic)).get()
-        if not document_stat:
-            document_stat = models.DocumentStats()
-            document_stat.document_id = document_id
-            document_stat.topic = topic
-            document_stat.count = 1
-        else:
-            document_stat.count = document_stat.count + 1
-        document_stat.put()
+        logging.info("Another submission: %d %s %s", user_id, tokens, tags)
 
-        topic_stat = models.TopicStats.gql("WHERE topic = %d and word = '%s'" % (topic, word_string)).get()
-        if not topic_stat:
-            topic_stat = models.TopicStats()
-            topic_stat.topic = topic
-            topic_stat.word = word_string
-            topic_stat.count = 1
-        else:
-            topic_stat.count = topic_stat.count + 1
-        topic_stat.put()
+        for ii in range(len(tags)):
+            subtoken = models.Subtokenization()
+            subtoken.token = tokens
+            subtoken.index = ii
+            subtoken.tag = int(tags[ii])
+            subtoken.user_id = user_id
+            subtoken.put()
 
-        self.redirect('/?user_id=%s' % self.request.get("user_id"))
+        self.response.out.write("")
+
 
 application = webapp.WSGIApplication([('/tokens.html', MainPage),
                                       ('/token_rpc', TokenFetcher),
+                                      ('/token_submit', RecordResult),
+                                      ('/token_finish', Finisher),
                                       ('/submit', RecordResult)],
                                      debug = True)
 

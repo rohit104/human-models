@@ -3,6 +3,11 @@ a.tag {
     text-decoration: none;
 }
 
+a.tag:hover {
+    background-color : black;
+}
+
+
 a.instruction_toggle {
     color : darkcyan;
     display: block;
@@ -10,16 +15,19 @@ a.instruction_toggle {
     text-decoration : none;
 }
 
-
-a.tag:hover {
-    background-color : black;
-}
-
 a.chosen {
     background-color : red;
 }
 
+div.colorchooser a.tag:hover {
+    background-color : grey;
+}
+
 a.chosen:hover  {
+    background-color : red;
+}
+
+div.colorchooser a.chosen:hover {
     background-color : red;
 }
 
@@ -31,7 +39,15 @@ a.chosen2:hover  {
     background-color : blue;
 }
 
+div.colorchooser a.chosen2:hover {
+    background-color : blue;
+}
+
 a.chosen3 {
+    background-color : purple;
+}
+
+div.colorchooser a.chosen3:hover {
     background-color : purple;
 }
 
@@ -70,12 +86,23 @@ div.instructions {
 a.done {
     display:inline-block;
     float:right;
-    background:lightcyan;
+    background-color:lightcyan;
     border:solid;
     text-decoration:none;
     border-color:black;
     border-style:double;
     color:black;
+}
+
+div.colorchooser {
+    display:inline-block;
+    float:right;
+    background-color:grey;
+    border:solid;
+    text-decoration:none;
+    border-color:black;
+    border-style:double;
+    margin-right:20px;
 }
 
 a.done:hover {
@@ -88,7 +115,9 @@ div.token {
     color : white;
     border : solid;
     border-color : black;
-    width:80%;
+    width:70%;
+    font-size: 18pt;
+    padding : 8px;
 }
 
 

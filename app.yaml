@@ -17,6 +17,12 @@ handlers:
 - url: /token_rpc
   script: tokens.py
 
+- url: /token_submit
+  script: tokens.py
+
+- url: /token_finish
+  script: tokens.py
+
 - url: /.*
   script: index.py
 

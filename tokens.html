@@ -2,7 +2,7 @@
   <title>Identifying Books</title>
   <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
   <script>
-    function chooseWord(word) {
+    function toggleColor(word) {
       var elem = document.getElementById("word_" + word);
       if (elem.className == "tag") {
         elem.className = "tag chosen";
@@ -13,6 +13,12 @@
       } else if (elem.className == "tag chosen3") {
         elem.className = "tag";
       }
+    }
+
+    function paintWord(word) {
+      var elem = document.getElementById("word_" + word);
+      var elem2 = document.getElementById("word_X");
+      elem.className = elem2.className;
     }
 
     function toggleInstructions() {
@@ -32,19 +38,48 @@
         req.open('GET', '/token_rpc?user_id={{user_id}}', true);
         req.onreadystatechange = function() { 
           if (req.readyState == 4 && req.status == 200) {
-             document.getElementById("token").innerHTML = req.responseText;
+             if (req.responseText.match("^/")) {
+               window.location = req.responseText;
+             } else {
+               document.getElementById("token").innerHTML = req.responseText;
+               document.getElementById("progress").innerHTML = document.getElementById("num_finished").value + " / 20";
+             }
           }
         }
         req.send(null);
     }
 
     function submit() {
+        var tags = "";
+
+        var num_words = document.getElementById("num_words").value;
+        var tokens = document.getElementById("tokens").value;
+
+        for (ii = 0; ii < num_words; ++ii) {
+          classname = document.getElementById("word_" + ii).className;
+          if (classname == "tag chosen") {
+             tags += "1";
+          } else if (classname == "tag chosen2") {
+             tags += "2";
+          } else if (classname == "tag chosen3") {
+             tags += "3";
+          } else if (classname == "tag") {
+             tags += "0";
+          } else {
+            alert("oopsies.");
+          }
+        }
+
         document.getElementById("token").innerHTML = "...Loading...";    
+
+        var req = new XMLHttpRequest();
+        req.open('GET', '/token_submit?user_id={{user_id}}&tags=' + tags + "&tokens=" + tokens, true);
+        req.send(null);    
         get_tag();
     }
   </script>
   <body onload="get_tag();">
-    <div class="progress">{{num_finished}} / 20</div>
+    <div class="progress" id="progress">...Loading progress...</div>
 
     <a class="instruction_toggle" 
        href="javascript:toggleInstructions();" id="instruction_toggle">
@@ -63,19 +98,34 @@
 	    <li><span class="snippet_example"><a href="#" class="chosen tag">romance</a> novels</span>
 	  </ul>
 	<li> To mark a word as being a part of an entity, click on it so that it changes color.  <b>Make sure that all the words comprising a single entity have the same color.</b>
+	<li> If the snippet refers to a series of books, please highlight just the name of the series.  E.g.,
+	  <ul>
+	    <li><span class="snippet_example">the <a href="#" class="chosen tag">twilight</a> collection</span>
+	  </ul>
 	<li> A single snippet of text may contain multiple distinct entities.  E.g.,
 	  <ul>
 	    <li><span class="snippet_example">i like <a href="#" class="chosen tag">war</a> <a href="#" class="chosen tag">and</a> <a href="#" class="chosen tag">peace</a> by <a href="#" class="chosen2 tag">tolstoy</a></span>
 	  </ul>
 
 	<li> <b>Make sure that different entities are colored
-	differently.</b>  Repeatedly clicking a word will cause it to
-	cycle through the three available colors for entities --- red,
-	blue, and purple --- and grey indicating that the word is not associated with an entity.
+	differently.</b>  To select the color with which you wish to
+	mark entities, click on the colored box to the right of the
+	snippet.  Clicking the box will cause it to cycle through the
+	three available colors for entities --- red, blue, and purple
+	--- and grey indicating that the word is not associated with
+	an entity.
+
 	<li> A snippet of text may also contain no entities.  E.g.,
 	  <ul>
 	    <li><span class="snippet_example">i don't like any books</span>
 	  </ul>
+
+	<li> <b>NOTE:</b> A word may count as an entity in one case and not in another based on context.  E.g.,
+	  <ul>
+	    <li><span class="snippet_example">novels by <a href="#" class="chosen tag">tolstoy</a></span> - In this case novels you <b>SHOULD NOT</b> tag the word "novels" because it is being used merely to refer to Tolstoy's body of work.
+	    <li><span class="snippet_example"><a href="#" class="chosen tag">novels</a> and <a href="#" class="chosen2 tag">biographies</a></span> - In this case you <b>SHOULD</b> tag the word "novels" because it refers specifically to the genre.
+	  </ul>
+
 	<li> You should tag entities even if they are slightly misspelled.
 	<li> Once you have finished tagging all the literary entities
 	in the snippet, click the button labeled <b>Done tagging</b>.
@@ -86,14 +136,13 @@
     <a href="javascript:submit()" class="done">
       Done tagging
     </a>
+    <div class="colorchooser">
+      <a href="javascript:toggleColor('X')" id="word_X" class="tag chosen">
+	&nbsp; &nbsp; &nbsp; &nbsp;
+      </a>
+    </div>
     <div class="token" id="token">
       ...Loading...
     </div>
-    <form action="/submit" method="post" id="form">
-      <input type="hidden" name="user_id" value="{{user_id}}">
-      <input type="hidden" name="word" id="form_word">
-      <input type="hidden" name="topic" id="form_topic">
-      <input type="hidden" name="word_string" id="form_word_string">
-    </form>
   </body>
 </html>
