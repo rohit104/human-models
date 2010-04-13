@@ -33,7 +33,7 @@
 \newcommand{\myeq}[1]{Equation~\ref{#1}}
 \newcommand{\mytab}[1]{Table~\ref{#1}}
 \newcommand{\wordset}[1]{\texttt{\{#1\}}}
-\newcommand{\word}[1]{\texttt{#1}}
+\newcommand{\word}[1]{\texttt{\small #1}}
 \newcommand{\mysec}[1]{Section~\ref{#1}}
 
 %%% Temporary
@@ -43,13 +43,16 @@
 %\rhead{}
 %\pagestyle{fancy}
 
-\title{Not-So-Latent Dirichlet Allocation: \\ 
+\title{\vspace{-0.4in}Not-So-Latent Dirichlet Allocation: \\ 
        Collapsed Gibbs Sampling Using Human Judgments}
 
-\author{}
+\author{Jonathan Chang \\ 
+        Facebook \\ 
+        1610 S California Ave. \\ 
+        Palo Alto, CA 94304 \\ 
+        \texttt{jonchang@facebook.com}}
 
 \begin{document}
-
 %% \makeanontitle
 \maketitle
 \vspace{-.1in}
@@ -74,16 +77,16 @@
 \input{tasks}
 \input{experiments}
 \section{Discussion}
-  We presented the first method for constructing topic models using
-  human judgments.  Our approach relies on a novel task,
-  \emph{tag-and-cluster}, which asks users to simultanesouly annotate
-  a document with one of its words and to cluster those annotations.
-  We demonstrate using experiments on Amazon Mechanical Turk that our
-  method constructs topic models quickly and robustly.  We also show
-  that while our topic models bear many similarities to traditionally
-  constructed topic models, our human-learned topic models have unique
-  features such as fixed sparsity and a tendency to construct topics
-  around concepts which models such as LDA typically fail to find.
+We presented a new method for constructing topic models using human
+judgments.  Our approach relies on a novel task,
+\emph{tag-and-cluster}, which asks users to simultaneously annotate a
+document with one of its words and to cluster those annotations.  We
+demonstrate using experiments on Amazon Mechanical Turk that our
+method constructs topic models quickly and robustly.  We also show
+that while our topic models bear many similarities to traditionally
+constructed topic models, our human-learned topic models have unique
+features such as fixed sparsity and a tendency for topics to be constructed
+around concepts which models such as LDA typically fail to find.
 
   We also underscore that the collapsed Gibbs sampling framework is
   expressive enough to use as the basis for human-guided topic model
@@ -93,8 +96,16 @@
   by humans.  In effect, our method constructs a series of samples
   from the posterior, a gold standard which future topic models can
   aim to emulate.
+\section*{Acknowledgments}
+The author would like to thank Eytan Bakshy and Professor Jordan
+Boyd-Graber-Ying for their helpful comments and discussions.
+
 \bibliographystyle{naaclhlt2010}
 {\footnotesize
 \bibliography{journal-abbrv,nlp}
 }
 \end{document}
+
+% Figure 4:
+% Also, you should label your axes.
+

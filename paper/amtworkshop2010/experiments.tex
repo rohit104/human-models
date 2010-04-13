@@ -44,7 +44,7 @@ completing an order of magnitude more HITs than other particpants.
 \subfigure[\emph{set1}, $K = 15$]{\includegraphics[width = .22\linewidth]{figures/histogram_2}}%
 \subfigure[\emph{set2}, $K = 10$]{\includegraphics[width = .22\linewidth]{figures/histogram_4}}%
 \subfigure[\emph{set2}, $K = 15$]{\includegraphics[width = .22\linewidth]{figures/histogram_3}}%
-\caption{The number of HITs performed by participant. Between 12 and 30 people participated in each experiment.}
+\caption{The number of HITs performed (y-axis) by each participant (x-axis). Between 12 and 30 people participated in each experiment.}
 \label{fig:hists}
 \end{figure*}
 
@@ -142,13 +142,13 @@ australia & knee & british & israel & set \\ \hline
 \subfigure[$K = 15$]{\includegraphics[width = .4\linewidth]{figures/entropy_K15}}
 
 \caption{A comparison of the entropy of distributions drawn from a
-  Dirichlet versus the entropy of the topic proportions inferred by
-  workers.  Each column of the boxplot shows the distribution of
-  entropies for 100 draws from a Dirichlet distribution with parameter
-  $\alpha$.  The two rightmost columns show the distribution of the
-  entropy of the topic proportions inferred by workers on \emph{set1}
-  and \emph{set2}.  The $\alpha$ of workers typically falls between 0.2
-  and 0.5.}
+  Dirichlet distribution versus the entropy of the topic proportions
+  inferred by workers.  Each column of the boxplot shows the
+  distribution of entropies for 100 draws from a Dirichlet
+  distribution with parameter $\alpha$.  The two rightmost columns
+  show the distribution of the entropy of the topic proportions
+  inferred by workers on \emph{set1} and \emph{set2}.  The $\alpha$ of
+  workers typically falls between 0.2 and 0.5.}
 
 \label{fig:entropy}
 \end{figure*}
@@ -253,15 +253,15 @@ each row shows an individual topic.  The five most frequently
 occurring words in each topic are shown, ordered from left to right.
 
 Many of the topics inferred by humans have straightforward
-interpretations.  For example, the \{\texttt{november, february,
+interpretations.  For example, the \{\word{november, february,
   april, august, december}\} topic for the \emph{set1} corpus with
 $K=10$ is simply a collection of months.  Similar topics (with years
 and months combined) can be found in the other experimental
 configurations.  Other topics also cover specific semantic domains,
-such as \{\texttt{president, emperor, politican, election,
-  government}\} or \{\texttt{music, pop, records, singer, artist}\}.
+such as \{\word{president, emperor, politican, election,
+  government}\} or \{\word{music, pop, records, singer, artist}\}.
 Several of the topics are combinations of distinct concepts, such as
-\{\texttt{catholic, church, film, music, actor}\}, which is often
+\{\word{catholic, church, film, music, actor}\}, which is often
 indicative of the number of clusters, $K$, being too low.
 
 \mytab{tab:lda-topic-samples} shows the topics learned by LDA under
@@ -269,8 +269,8 @@ the same experimental conditions, with the Dirichlet hyperparameter
 $\alpha = 0.2$ (we justify this choice in the following section).
 These topics are more difficult to interpret than the ones created by
 humans.  Some topics seem to largely make sense except for some
-anomalous words, such as \{\texttt{district, town, city, local,
-  kolkata}\} or \{\texttt{school, university, college, election,
+anomalous words, such as \{\word{district, town, city, local,
+  kolkata}\} or \{\word{school, university, college, election,
   born}\}.  But the small amount of data means that it is difficult
 for a model which does not leverage prior knowledge to infer
 meaningful topic.  In contrast, several humans, even working
@@ -290,7 +290,7 @@ larger corpus.
 \paragraph{Hyperparameter values} A persistent question among
 practitioners of topic models is how to set or learn the value of the
 hyperparameter $\alpha$.  $\alpha$ is a Dirichlet parameter which acts
-a control on sparsity --- smaller values of $\alpha$ lead to sparser
+as a control on sparsity --- smaller values of $\alpha$ lead to sparser
 document-topic distributions.  By comparing the sparsity patterns of
 human judgments to those of LDA for different settings of $\alpha$, we
 can infer the value of $\alpha$ that would best match human judgments.
@@ -374,7 +374,7 @@ weakly incorporate human knowledge into the model.
 initialized with human judgments.  These topics resemble those
 directly inferred by humans, although as we predicted in the previous
 sections, the topic consisting of months has largely disappeared.
-Other semantically coherent topics, such as \{\texttt{located, south,
+Other semantically coherent topics, such as \{\word{located, south,
   site, land, region}\}, have appeared in its place.
 
 \myfig{fig:initialize} shows the log-likelihood course of LDA when
